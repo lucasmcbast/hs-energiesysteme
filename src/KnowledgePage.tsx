@@ -1,3 +1,4 @@
+import { Link } from "react-router"
 import logoBosch from "./imports/Bosch_Logo.png"
 import logoViessmann from "./imports/Viessmann_Logo.png"
 import logoVaillant from "./imports/vaillant-logo.png"
@@ -114,9 +115,9 @@ function KnowledgeHero() {
       <div className="relative mx-auto grid max-w-7xl gap-12 px-5 pb-20 md:px-8 md:pb-28 lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:gap-20">
         <div className="reveal">
           <div className="flex items-center gap-3 text-sm font-semibold text-offwhite/60">
-            <a href="/" className="transition-colors hover:text-offwhite">
+            <Link to="/" className="transition-colors hover:text-offwhite">
               Startseite
-            </a>
+            </Link>
             <span aria-hidden="true">/</span>
             <span className="text-yellow">Wissen</span>
           </div>
@@ -169,16 +170,16 @@ function KnowledgeHero() {
             </p>
             <div className="mt-4 divide-y divide-offwhite/15">
               {[BASICS[0], FINANCE[0], FINANCE[1]].map((article) => (
-                <a
+                <Link
                   key={article.href}
-                  href={article.href}
+                  to={article.href}
                   className="group flex items-center justify-between gap-5 py-4 first:pt-0"
                 >
                   <span className="font-medium leading-snug">
                     {article.title}
                   </span>
                   <ArrowIcon className="h-4 w-4 shrink-0 text-yellow transition-transform duration-200 group-hover:translate-x-1" />
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -228,8 +229,8 @@ function TopicNavigation() {
 
 function ArticleCard({ article }: { article: Article }) {
   return (
-    <a
-      href={article.href}
+    <Link
+      to={article.href}
       className="reveal group flex min-h-72 flex-col rounded-2xl border border-graphite/10 bg-offwhite p-7 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-graphite/10"
     >
       <span className="text-sm font-semibold uppercase tracking-[0.18em] text-amber">
@@ -246,7 +247,7 @@ function ArticleCard({ article }: { article: Article }) {
           <ArrowIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
         </span>
       </span>
-    </a>
+    </Link>
   )
 }
 
@@ -287,9 +288,9 @@ function Finance() {
         <div className="grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-16">
           <div className="knowledge-stagger order-2 grid gap-4 sm:grid-cols-2 lg:order-1">
             {FINANCE.map((article) => (
-              <a
+              <Link
                 key={article.href}
-                href={article.href}
+                to={article.href}
                 className="group flex min-h-80 flex-col rounded-2xl border border-offwhite/10 bg-offwhite/[0.06] p-7 transition-colors hover:bg-offwhite/[0.1]"
               >
                 <span className="text-sm font-semibold uppercase tracking-[0.18em] text-yellow">
@@ -310,7 +311,7 @@ function Finance() {
                     <ArrowIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
                   </span>
                 </span>
-              </a>
+              </Link>
             ))}
           </div>
           <div className="reveal order-1 lg:order-2">
@@ -363,9 +364,9 @@ function Manufacturers() {
 
         <div className="knowledge-stagger mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {MANUFACTURERS.map((manufacturer) => (
-            <a
+            <Link
               key={manufacturer.name}
-              href={manufacturer.href}
+              to={manufacturer.href}
               className="reveal group flex min-h-80 flex-col rounded-2xl border border-graphite/10 bg-offwhite p-6 transition-all duration-300 hover:-translate-y-1 hover:border-amber/40 hover:shadow-xl hover:shadow-graphite/10"
             >
               <img
@@ -385,7 +386,7 @@ function Manufacturers() {
                   <ArrowIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
                 </span>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </div>
@@ -431,9 +432,9 @@ function Types() {
 
       <div className="knowledge-stagger mt-12 grid gap-6 md:grid-cols-2">
         {types.map((type) => (
-          <a
+          <Link
             key={type.title}
-            href={type.href}
+            to={type.href}
             className="reveal group flex min-h-80 flex-col rounded-2xl border border-graphite/10 bg-offwhite p-7 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-graphite/10 sm:p-9"
           >
             <span className="text-sm font-semibold uppercase tracking-[0.18em] text-amber">
@@ -452,7 +453,7 @@ function Types() {
                 <ArrowIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
               </span>
             </span>
-          </a>
+          </Link>
         ))}
       </div>
     </section>

@@ -1,8 +1,18 @@
-name: Build
+name: Build & Deploy
 
 on:
   push:
   pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -18,4 +28,27 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec tsc --noEmit
+      # GitHub Pages serves the site under /<repo>/; vite.config.ts reads this as `base`.
       - run: pnpm build
+        env:
+          FIGMA_PUBLIC_URL: /${{ github.event.repository.name }}
+      # Single-page app: let Pages fall back to the app for deep links like /ueber-uns.
+      - run: cp dist/index.html dist/404.html
+      - if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - id: deployment
+        uses: actions/deploy-pages@v4

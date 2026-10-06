@@ -1,3 +1,4 @@
+import { Link } from "react-router"
 import { useEffect } from "react"
 import { ArrowIcon, SectionHeading } from "./SeoArticlePage"
 import logoBosch from "./imports/Bosch_Logo.png"
@@ -139,16 +140,16 @@ function ArticleHero() {
       />
       <div className="relative mx-auto max-w-7xl px-5 pb-16 md:px-8 md:pb-24">
         <div className="flex items-center gap-3 text-sm font-semibold text-slate">
-          <a href="/" className="transition-colors hover:text-graphite">
+          <Link to="/" className="transition-colors hover:text-graphite">
             Startseite
-          </a>
+          </Link>
           <span aria-hidden="true">/</span>
-          <a
-            href="/wissen-und-infos"
+          <Link
+            to="/wissen-und-infos"
             className="transition-colors hover:text-graphite"
           >
             Wissen
-          </a>
+          </Link>
           <span aria-hidden="true">/</span>
           <span className="text-amber">Hersteller</span>
         </div>
@@ -444,20 +445,20 @@ function Costs() {
         ))}
       </div>
       <div className="flex flex-wrap gap-4">
-        <a
-          href="/kosten/waermepumpen-kosten"
+        <Link
+          to="/kosten/waermepumpen-kosten"
           className="inline-flex items-center gap-2 font-semibold text-graphite underline decoration-yellow decoration-4 underline-offset-4"
         >
           Wärmepumpen-Kosten im Detail
           <ArrowIcon className="h-4 w-4" />
-        </a>
-        <a
-          href="/kosten/foerderung-waermepumpe"
+        </Link>
+        <Link
+          to="/kosten/foerderung-waermepumpe"
           className="inline-flex items-center gap-2 font-semibold text-graphite underline decoration-yellow decoration-4 underline-offset-4"
         >
           Aktuelle KfW-Förderung
           <ArrowIcon className="h-4 w-4" />
-        </a>
+        </Link>
       </div>
     </section>
   )
@@ -603,9 +604,9 @@ function RelatedArticles() {
         </h2>
         <div className="knowledge-stagger mt-10 grid gap-5 md:grid-cols-3">
           {articles.map((article) => (
-            <a
+            <Link
               key={article.href}
-              href={article.href}
+              to={article.href}
               className="reveal group flex min-h-64 flex-col rounded-2xl border border-graphite/10 bg-offwhite p-6 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-graphite/10"
             >
               <span className="text-xs font-semibold uppercase tracking-[0.18em] text-amber">
@@ -618,7 +619,7 @@ function RelatedArticles() {
                 Artikel lesen
                 <ArrowIcon className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </span>
-            </a>
+            </Link>
           ))}
         </div>
       </div>

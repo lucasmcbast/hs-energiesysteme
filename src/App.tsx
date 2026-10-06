@@ -81,7 +81,7 @@ const NAV: { label: string; href?: string; to?: string }[] = [
   { label: "Wärmepumpen", to: "/waermepumpen" },
   { label: "Über uns", to: "/ueber-uns" },
   { label: "Wissen", to: "/wissen-und-infos" },
-  { label: "So arbeiten wir", href: "/#prozess" },
+  { label: "So arbeiten wir", href: `${import.meta.env.BASE_URL}#prozess` },
   { label: "Kontakt", href: "#kontakt" },
 ]
 
@@ -2750,7 +2750,7 @@ const router = createBrowserRouter([
     ],
   },
   { path: "/flyer", Component: FlyerPage },
-])
+], { basename: import.meta.env.BASE_URL })
 
 export default function App() {
   return <RouterProvider router={router} />
