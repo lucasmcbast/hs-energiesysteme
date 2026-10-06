@@ -1,0 +1,149 @@
+/* ================================================================== */
+/*  H&S Energiesysteme — Design System v1.0                           */
+/*  Kopiere diese Datei in dein neues Projekt und importiere sie      */
+/*  in main.tsx: import './design-system.css'                         */
+/* ================================================================== */
+
+/* 1. Google Fonts — muss ganz oben stehen */
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&display=swap');
+
+/* 2. Tailwind (nur wenn das Projekt Tailwind v4 nutzt, sonst weglassen) */
+@import 'tailwindcss';
+
+/* ------------------------------------------------------------------ */
+/*  Brand Tokens                                                        */
+/* ------------------------------------------------------------------ */
+@theme {
+  /* Farben */
+  --color-graphite:  #1f1d1d; /* Dark Graphite  — Haupthintergrund, Headlines   */
+  --color-ink:       #2d353c; /* Soft Dark       — große dunkle Flächen          */
+  --color-offwhite:  #f9f6f6; /* Off White       — Seitenhintergrund, helle Cards */
+  --color-amber:     #fca31d; /* Amber           — primäre Akzentfarbe, CTAs     */
+  --color-yellow:    #ffcb43; /* Warm Yellow     — Marker-Highlight, Selection   */
+  --color-slate:     #4d5a64; /* Slate Gray      — Fließtext, Labels             */
+  --color-greengray: #9dadae; /* Green-Gray      — gedämpfte Texte, Captions     */
+  --color-bluegray:  #c1c8d0; /* Blue-Gray       — Borders, Trennlinien          */
+  --color-softgreen: #d8dcd4; /* Soft Green-Gray — subtile Hintergründe          */
+  --color-softblue:  #e3e7ef; /* Soft Blue-Gray  — alternative Hintergründe      */
+
+  /* Schriften */
+  --font-display: 'Newsreader', Georgia, serif;       /* Headlines, Display-Text */
+  --font-body:    'Hanken Grotesk', system-ui, sans-serif; /* Fließtext, UI      */
+}
+
+/* ------------------------------------------------------------------ */
+/*  Basis-Styles                                                        */
+/* ------------------------------------------------------------------ */
+body {
+  background-color: var(--color-offwhite);
+  color: var(--color-graphite);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Textauswahl in Brand-Farben */
+::selection {
+  background-color: var(--color-yellow);
+  color: var(--color-graphite);
+}
+
+/* Scrollbar dezent */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-bluegray) transparent;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Typografie-Hilfklassen                                              */
+/* ------------------------------------------------------------------ */
+
+/* Große Seiten-Headline */
+.hs-display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+
+/* Abschnitt-Headline */
+.hs-heading {
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+/* Eyebrow-Label (Kategorie über Headlines) */
+.hs-eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;   /* 11px */
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-amber);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Marker-Highlight (Textunterstreichung in Gelb)                     */
+/* ------------------------------------------------------------------ */
+.marker {
+  background-image: linear-gradient(120deg, transparent 0%, var(--color-yellow) 0%);
+  background-repeat: no-repeat;
+  background-position: 0 78%;
+  background-size: 100% 42%;
+  padding: 0 0.06em;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Scroll-Reveal Animation                                             */
+/* ------------------------------------------------------------------ */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity  0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Logo-Marquee (Hersteller-Logos automatisch scrollend)              */
+/* ------------------------------------------------------------------ */
+.marquee {
+  --marquee-duration: 38s;
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+.marquee__track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll var(--marquee-duration) linear infinite;
+}
+.marquee:hover .marquee__track {
+  animation-play-state: paused;
+}
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Reduced Motion                                                      */
+/* ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .marquee__track {
+    animation: none !important;
+  }
+  * {
+    scroll-behavior: auto !important;
+  }
+}
