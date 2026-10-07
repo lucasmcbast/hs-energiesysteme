@@ -40,6 +40,9 @@ const PHONE_HREF = "tel:+4921548809537"
 const WHATSAPP_HREF = "https://wa.me/4921548809537"
 const CALENDLY_HREF = "https://calendly.com/d/ck5p-4mg-cx7"
 const GOOGLE_REVIEWS_HREF = "https://g.co/kgs/BAWjz9L"
+/* Google-Profil Standort Willich (Stand Okt. 2026). Köln/Solingen später ergänzen. */
+const GOOGLE_RATING = "4,9"
+const GOOGLE_REVIEW_COUNT = 107
 
 /* Kampagnen-Parameter, die an den Funnel weitergereicht werden, damit
    Leads in Heyflow/Ads der richtigen Kampagne zugeordnet bleiben. */
@@ -286,6 +289,27 @@ function Microcopy({ dark = false }: { dark?: boolean }) {
   )
 }
 
+/* Dringlichkeit — nur belegbare Fakten: Kürzung zum 21.07.2026, Antrag vor Auftragsbeginn. */
+function UrgencyBanner({ funnel }: { funnel: FunnelLink }) {
+  return (
+    <a
+      href={funnel({ cta: "banner" })}
+      data-cta="banner"
+      className="block bg-graphite px-5 py-2.5 text-center text-sm text-offwhite transition-colors hover:bg-ink"
+    >
+      <span className="mr-2 inline-block rounded-full bg-yellow px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-graphite">
+        Förderung 2026
+      </span>
+      <span className="hidden sm:inline">Die Förderung wurde zum 21.07.2026 bereits gekürzt — jetzt die aktuellen Sätze sichern. </span>
+      <span className="sm:hidden">Bereits gekürzt — aktuelle Sätze sichern. </span>
+      <span className="font-semibold text-yellow underline underline-offset-2">
+        <span className="hidden sm:inline">Förder-Check starten</span>
+        <span className="sm:hidden">Prüfen</span>
+      </span>
+    </a>
+  )
+}
+
 function LpHeader({ funnel }: { funnel: FunnelLink }) {
   return (
     <header className="sticky top-0 z-50 border-b border-graphite/10 bg-offwhite/95 backdrop-blur-md">
@@ -332,7 +356,8 @@ function Hero({ funnel }: { funnel: FunnelLink }) {
             rel="noreferrer"
             className="inline-flex items-center gap-2 rounded-full border border-graphite/15 bg-offwhite px-3.5 py-1.5 text-[13px] font-semibold text-slate"
           >
-            <Stars /> Bewertungen auf Google
+            <span className="font-display text-base font-semibold text-graphite">{GOOGLE_RATING}</span>
+            <Stars /> {GOOGLE_REVIEW_COUNT} Google-Bewertungen
           </a>
           <h1 className="mt-5 font-display text-[2.5rem] font-semibold leading-[1.03] tracking-[-0.02em] text-graphite sm:text-6xl md:text-[4rem]">
             Ihre Wärmepumpe vom{" "}
@@ -525,6 +550,15 @@ function Funding({ funnel }: { funnel: FunnelLink }) {
             Wir prüfen Ihre Förderbausteine, erstellen die Bestätigung zum
             KfW-Antrag und begleiten Sie Schritt für Schritt.
           </p>
+          <p className="mt-5 flex gap-3 rounded-2xl border border-yellow/40 bg-yellow/10 p-4 text-sm leading-relaxed text-offwhite/85">
+            <span aria-hidden="true" className="text-lg leading-none">⏳</span>
+            <span>
+              <strong className="text-yellow">Wichtig:</strong> Der Antrag muss vor
+              Auftragsbeginn gestellt werden, und die Sätze wurden 2026 bereits
+              gesenkt (z. B. Klimabonus von 20 auf 16 %). Wer früh plant, sichert
+              sich die aktuellen Konditionen.
+            </span>
+          </p>
           <PrimaryCta href={funnel({ cta: "foerderung" })} cta="foerderung" className="mt-8">
             Förderung & Preis berechnen
           </PrimaryCta>
@@ -712,9 +746,18 @@ function Reviews({ funnel }: { funnel: FunnelLink }) {
           href={GOOGLE_REVIEWS_HREF}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-2 font-semibold text-graphite underline decoration-yellow decoration-4 underline-offset-4"
+          className="flex items-center gap-4 rounded-2xl border border-graphite/10 bg-offwhite px-5 py-4 transition-shadow hover:shadow-lg hover:shadow-graphite/5"
         >
-          Alle Bewertungen auf Google <ArrowIcon className="h-4 w-4" />
+          <span className="font-display text-5xl font-semibold leading-none text-graphite">{GOOGLE_RATING}</span>
+          <span>
+            <Stars className="text-lg" />
+            <span className="block text-sm text-slate">
+              {GOOGLE_REVIEW_COUNT} Bewertungen auf Google
+            </span>
+            <span className="mt-1 inline-flex items-center gap-1 text-sm font-semibold text-graphite">
+              Alle lesen <ArrowIcon className="h-3.5 w-3.5" />
+            </span>
+          </span>
         </a>
       </div>
       <div className="knowledge-stagger mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -927,6 +970,7 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-full bg-offwhite">
+      <UrgencyBanner funnel={funnel} />
       <LpHeader funnel={funnel} />
       <main>
         <Hero funnel={funnel} />
