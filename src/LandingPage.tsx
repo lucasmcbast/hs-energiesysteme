@@ -53,10 +53,10 @@ type FunnelLink = ReturnType<typeof useFunnelLink>
 /* Erste Funnel-Frage direkt im Hero: ein Klick = Einstieg in den Funnel.
    TODO: prüfen, ob Heyflow ?heizung= vorbelegt; sonst landet man einfach am Start. */
 const HEATING_OPTIONS = [
-  { id: "gas", label: "Gas" },
-  { id: "oel", label: "Öl" },
-  { id: "nachtspeicher", label: "Nachtspeicher" },
-  { id: "andere", label: "Andere" },
+  { id: "gas", label: "Gas", icon: "M12 3c1 3.5 5 5.5 5 10a5 5 0 01-10 0c0-2.5 1.5-4 2.5-5 0 2 1 3 2 3.5C11 9 11 6 12 3z" },
+  { id: "oel", label: "Öl", icon: "M12 3s6 6.5 6 11a6 6 0 01-12 0c0-4.5 6-11 6-11z" },
+  { id: "nachtspeicher", label: "Nachtspeicher", icon: "M13 2L5 13h6l-1 9 8-11h-6l1-9z" },
+  { id: "andere", label: "Andere", icon: "M5 12h.01M12 12h.01M19 12h.01" },
 ]
 
 const HERO_BULLETS = [
@@ -322,31 +322,16 @@ function Hero({ funnel }: { funnel: FunnelLink }) {
             ))}
           </ul>
 
-          {/* Mikro-Einstieg: erste Funnel-Frage direkt auf der Seite */}
-          <div className="mt-8 rounded-2xl border border-graphite/10 bg-offwhite p-5 shadow-xl shadow-graphite/5 sm:p-6">
-            <p className="font-display text-xl font-semibold text-graphite">
-              Was kostet Ihre Wärmepumpe? Starten Sie hier:
-            </p>
-            <p className="mt-1 text-sm text-slate">Womit heizen Sie aktuell?</p>
-            <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
-              {HEATING_OPTIONS.map((o) => (
-                <a
-                  key={o.id}
-                  href={funnel({ heizung: o.id, cta: "hero-heizung" })}
-                  data-cta={`hero-heizung-${o.id}`}
-                  className="rounded-xl border border-graphite/15 bg-offwhite px-3 py-3 text-center font-semibold text-graphite transition-all duration-200 hover:-translate-y-0.5 hover:border-yellow hover:bg-yellow/15"
-                >
-                  {o.label}
-                </a>
-              ))}
-            </div>
-            <PrimaryCta href={funnel({ cta: "hero" })} cta="hero" className="mt-4 w-full">
-              Kostenloses Angebot anfragen
-            </PrimaryCta>
-            <p className="mt-3 text-center text-xs text-slate">
-              In 2 Minuten · kostenlos & unverbindlich
-            </p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <PrimaryCta href={funnel({ cta: "hero" })} cta="hero" />
+            <a
+              href="#preisrechner"
+              className="inline-flex items-center justify-center rounded-full border border-graphite/20 px-7 py-4 text-base font-semibold text-graphite transition-colors duration-200 hover:bg-graphite hover:text-offwhite"
+            >
+              Kosten berechnen
+            </a>
           </div>
+          <Microcopy />
         </div>
 
         <div className="relative">
@@ -363,6 +348,63 @@ function Hero({ funnel }: { funnel: FunnelLink }) {
               </div>
             ))}
           </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+/* Hervorgehobener Einstieg in den Funnel: erste Frage direkt auf der Seite */
+function PriceCalculator({ funnel }: { funnel: FunnelLink }) {
+  return (
+    <section id="preisrechner" className="scroll-mt-20 bg-yellow">
+      <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-5 py-14 md:px-8 md:py-20 lg:grid-cols-[0.9fr_1.1fr]">
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-graphite/60">
+            Kostenloser Preisrechner
+          </p>
+          <h2 className="mt-3 font-display text-4xl font-semibold leading-tight tracking-[-0.02em] text-graphite md:text-5xl">
+            Was kostet Ihre Wärmepumpe?
+          </h2>
+          <p className="mt-4 max-w-md text-lg leading-relaxed text-graphite/75">
+            Beantworten Sie ein paar kurze Fragen zu Ihrem Haus — wir erstellen
+            Ihnen ein persönliches Angebot inklusive Förder-Check.
+          </p>
+          <ul className="mt-6 space-y-2.5">
+            {["In rund 2 Minuten erledigt", "Kostenlos & unverbindlich", "Inklusive Förder-Check"].map((t) => (
+              <li key={t} className="flex items-center gap-3 font-medium text-graphite">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-graphite text-[11px] font-bold text-yellow">✓</span>
+                {t}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="rounded-3xl bg-offwhite p-6 shadow-2xl shadow-graphite/15 sm:p-9">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber">Frage 1</p>
+          <p className="mt-2 font-display text-2xl font-semibold text-graphite sm:text-3xl">
+            Womit heizen Sie aktuell?
+          </p>
+          <div className="mt-6 grid grid-cols-2 gap-3">
+            {HEATING_OPTIONS.map((o) => (
+              <a
+                key={o.id}
+                href={funnel({ heizung: o.id, cta: "rechner-heizung" })}
+                data-cta={`rechner-heizung-${o.id}`}
+                className="group flex flex-col items-center gap-3 rounded-2xl border-2 border-graphite/10 bg-offwhite px-3 py-5 text-center font-semibold text-graphite transition-all duration-200 hover:-translate-y-0.5 hover:border-yellow hover:bg-yellow/15 hover:shadow-lg hover:shadow-yellow/20"
+              >
+                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-yellow/30 text-graphite transition-colors group-hover:bg-yellow">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d={o.icon} />
+                  </svg>
+                </span>
+                {o.label}
+              </a>
+            ))}
+          </div>
+          <p className="mt-5 text-center text-sm text-slate">
+            Mit einem Klick geht es direkt weiter.
+          </p>
         </div>
       </div>
     </section>
@@ -745,6 +787,7 @@ export default function LandingPage() {
       <LpHeader funnel={funnel} />
       <main>
         <Hero funnel={funnel} />
+        <PriceCalculator funnel={funnel} />
         <LogoStrip />
         <HowItWorks funnel={funnel} />
         <Funding funnel={funnel} />
