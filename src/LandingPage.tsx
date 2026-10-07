@@ -621,9 +621,7 @@ function Reasons() {
 
 function Installations({ funnel }: { funnel: FunnelLink }) {
   const [filter, setFilter] = useState<"Alle" | "Außen" | "Innen">("Alle")
-  const [showAll, setShowAll] = useState(false)
   const items = INSTALLATIONS.filter((i) => filter === "Alle" || i.where === filter)
-  const visible = showAll ? items : items.slice(0, 8)
 
   return (
     <section id="referenzen" className="mx-auto max-w-7xl scroll-mt-20 px-5 py-16 md:px-8 md:py-24">
@@ -646,7 +644,6 @@ function Installations({ funnel }: { funnel: FunnelLink }) {
               aria-selected={filter === f}
               onClick={() => {
                 setFilter(f)
-                setShowAll(false)
               }}
               className={`rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
                 filter === f
@@ -661,7 +658,7 @@ function Installations({ funnel }: { funnel: FunnelLink }) {
       </div>
 
       <ul className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-        {visible.map((i, idx) => (
+        {items.map((i, idx) => (
           <li key={i.src} className="group relative overflow-hidden rounded-2xl bg-softblue">
             <img
               src={i.src}
@@ -677,15 +674,7 @@ function Installations({ funnel }: { funnel: FunnelLink }) {
         ))}
       </ul>
 
-      <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-        {!showAll && items.length > 8 && (
-          <button
-            onClick={() => setShowAll(true)}
-            className="rounded-full border border-graphite/20 px-6 py-3 font-semibold text-graphite transition-colors hover:bg-graphite hover:text-offwhite"
-          >
-            Alle {items.length} Fotos zeigen
-          </button>
-        )}
+      <div className="mt-8 flex justify-center">
         <PrimaryCta href={funnel({ cta: "referenzen" })} cta="referenzen">
           So eine Anlage anfragen
         </PrimaryCta>
@@ -788,7 +777,7 @@ function Reviews({ funnel }: { funnel: FunnelLink }) {
 
 function Region() {
   return (
-    <section className="border-y border-graphite/10 bg-softblue/30">
+    <section className="border-y border-graphite/10 bg-white">
       <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 py-16 md:px-8 md:py-24 lg:grid-cols-2">
         <div className="reveal">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-amber">Einzugsgebiet</p>
@@ -807,7 +796,7 @@ function Region() {
             ))}
           </div>
         </div>
-        <div className="reveal rounded-3xl border border-graphite/10 bg-offwhite p-4">
+        <div className="reveal">
           <img src={karte} alt="Karte des Einzugsgebiets von H&S mit Willich, Köln und Solingen" loading="lazy" className="mx-auto w-full max-w-lg" />
         </div>
       </div>
