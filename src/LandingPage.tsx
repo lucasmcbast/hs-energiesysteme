@@ -62,7 +62,7 @@ const HEATING_OPTIONS = [
 const HERO_BULLETS = [
   "Installation in 4–5 Werktagen",
   "Bis zu 70 % Förderung — wir begleiten den Antrag",
-  "Herstellerunabhängige Beratung",
+  "Auch im Altbau mit normalen Heizkörpern",
   "Persönlicher Ansprechpartner, auch nach dem Einbau",
 ]
 
@@ -489,9 +489,10 @@ function Funding({ funnel }: { funnel: FunnelLink }) {
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-yellow">Förderung 2026</p>
           <h2 className="mt-3 font-display text-4xl font-semibold leading-tight tracking-[-0.02em] md:text-5xl">
-            Der Staat zahlt bis zu 70 % mit.
+            Bis zu 22.400 € Zuschuss vom Staat.
           </h2>
           <p className="mt-4 max-w-md text-lg leading-relaxed text-offwhite/70">
+            Für die meisten Eigentümer sind es 46 % — also bis zu 12.880 €.
             Wir prüfen Ihre Förderbausteine, erstellen die Bestätigung zum
             KfW-Antrag und begleiten Sie Schritt für Schritt.
           </p>
