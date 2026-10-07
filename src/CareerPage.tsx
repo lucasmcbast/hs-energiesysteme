@@ -432,7 +432,7 @@ function Voices() {
 
 function Process() {
   return (
-    <section className="mx-auto max-w-7xl px-5 py-20 md:px-8 md:py-28">
+    <section className="mx-auto max-w-7xl px-5 pb-20 pt-4 md:px-8 md:pb-24 md:pt-6">
       <div className="reveal max-w-2xl">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-amber">
           Unser Bewerbungsprozess
@@ -522,10 +522,10 @@ export default function CareerPage() {
   return (
     <>
       <CareerHero />
-      <OpenPositions />
-      {/* Direkt nach den Stellen: zeigen, wie einfach die Bewerbung ist. */}
+      {/* Direkt nach dem Hero: zeigen, wie einfach die Bewerbung ist. */}
       <Process />
       <RecruitingContact />
+      <OpenPositions />
       <Benefits />
       <Voices />
     </>
