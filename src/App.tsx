@@ -7,6 +7,7 @@ import {
   useLocation,
 } from "react-router"
 import logoDark from "./imports/H_S_logo_large-Dark.png"
+import useReveal from "./useReveal"
 import heroWaermepumpe from "./imports/L1090589-Edit.jpg"
 import familieHaus from "./imports/image-3.webp"
 import portraitGF from "./imports/image-4.webp"
@@ -33,33 +34,6 @@ import logoBwp from "./imports/bwp.jpg"
 /* Zentraler Clickout in den Heyflow-Angebots-Funnel.
    TODO: durch den echten Heyflow-Link ersetzen. */
 const HEYFLOW_URL = "#heyflow-angebot"
-
-/* ------------------------------------------------------------------ */
-/*  Hilfs-Hook: sanftes Scroll-Reveal (respektiert reduced-motion)     */
-/* ------------------------------------------------------------------ */
-function useReveal(dep?: unknown) {
-  useEffect(() => {
-    const els = Array.from(document.querySelectorAll<HTMLElement>(".reveal"))
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      els.forEach((el) => el.classList.add("is-visible"))
-      return
-    }
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.classList.add("is-visible")
-            io.unobserve(e.target)
-          }
-        })
-      },
-      { threshold: 0.15, rootMargin: "0px 0px -8% 0px" },
-    )
-    els.forEach((el) => io.observe(el))
-    return () => io.disconnect()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dep])
-}
 
 /* Logo — die offizielle Datei, unverändert. `light` invertiert nur die
    Farbe zu Weiß für dunkle Hintergründe (Brand erlaubt Graphite oder Weiß). */
@@ -2724,6 +2698,7 @@ import BoschHeatPumpPage from "./BoschHeatPumpPage"
 import DomesticHotWaterHeatPumpPage from "./DomesticHotWaterHeatPumpPage"
 import AirWaterHeatPumpPage from "./AirWaterHeatPumpPage"
 import CareerPage from "./CareerPage"
+import LandingPage from "./LandingPage"
 
 const router = createBrowserRouter([
   {
@@ -2769,6 +2744,8 @@ const router = createBrowserRouter([
     ],
   },
   { path: "/flyer", Component: FlyerPage },
+  // Kampagnen-Landingpage: eigenes, ablenkungsfreies Layout ohne Hauptnavigation.
+  { path: "/lp/waermepumpe-nrw", Component: LandingPage },
 ], { basename: import.meta.env.BASE_URL })
 
 export default function App() {
