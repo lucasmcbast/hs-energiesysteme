@@ -523,10 +523,11 @@ export default function CareerPage() {
     <>
       <CareerHero />
       <OpenPositions />
-      <Benefits />
-      <Voices />
+      {/* Direkt nach den Stellen: zeigen, wie einfach die Bewerbung ist. */}
       <Process />
       <RecruitingContact />
+      <Benefits />
+      <Voices />
     </>
   )
 }
