@@ -17,6 +17,18 @@ import logoVaillant from "./imports/vaillant-logo.png"
 import logoViessmann from "./imports/Viessmann_Logo.png"
 import logoPanasonic from "./imports/panasonic-logo.png"
 import logoBwp from "./imports/bwp.jpg"
+import inst1 from "./imports/installation-1.webp"
+import inst2 from "./imports/installation-2.webp"
+import inst3 from "./imports/installation-3.webp"
+import inst4 from "./imports/installation-4.webp"
+import inst5 from "./imports/installation-5.webp"
+import inst6 from "./imports/installation-6.webp"
+import inst7 from "./imports/installation-7.webp"
+import inst8 from "./imports/installation-8.webp"
+import inst9 from "./imports/installation-9.webp"
+import inst11 from "./imports/installation-11.webp"
+import inst15 from "./imports/installation-15.webp"
+import inst16 from "./imports/installation-16.webp"
 
 /* ------------------------------------------------------------------ */
 /*  Kampagnen-Landingpage: ein Ziel — der Klick in den Angebots-Funnel */
@@ -164,6 +176,23 @@ const GALLERY = [
   { src: kupferFoto, alt: "Sauber verlegte Kupferleitungen einer H&S Installation" },
   { src: deckeFoto, alt: "H&S Monteur bei der Rohrmontage an der Kellerdecke" },
   { src: rohreFoto, alt: "Anschluss der Hydraulik an der Inneneinheit" },
+]
+
+
+/* Echte Anlagen von H&S (aus der bisherigen Landingpage). Marke nur, wo sie am Gerät sichtbar ist. */
+const INSTALLATIONS: { src: string; where: "Außen" | "Innen"; brand?: string }[] = [
+  { src: inst1, where: "Außen", brand: "Buderus" },
+  { src: inst2, where: "Außen", brand: "Bosch" },
+  { src: inst15, where: "Außen", brand: "Vaillant" },
+  { src: inst5, where: "Innen", brand: "Bosch" },
+  { src: inst11, where: "Außen", brand: "Buderus" },
+  { src: inst4, where: "Innen" },
+  { src: inst9, where: "Außen", brand: "Bosch" },
+  { src: inst8, where: "Innen", brand: "Bosch" },
+  { src: inst3, where: "Außen", brand: "Buderus" },
+  { src: inst16, where: "Innen" },
+  { src: inst7, where: "Außen", brand: "Buderus" },
+  { src: inst6, where: "Innen", brand: "Bosch" },
 ]
 
 const PARTNER_LOGOS = [
@@ -556,6 +585,119 @@ function Reasons() {
   )
 }
 
+function Installations({ funnel }: { funnel: FunnelLink }) {
+  const [filter, setFilter] = useState<"Alle" | "Außen" | "Innen">("Alle")
+  const [showAll, setShowAll] = useState(false)
+  const items = INSTALLATIONS.filter((i) => filter === "Alle" || i.where === filter)
+  const visible = showAll ? items : items.slice(0, 8)
+
+  return (
+    <section id="referenzen" className="mx-auto max-w-7xl scroll-mt-20 px-5 py-16 md:px-8 md:py-24">
+      <div className="reveal flex flex-col justify-between gap-6 md:flex-row md:items-end">
+        <div className="max-w-2xl">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-amber">Echte Installationen</p>
+          <h2 className="mt-3 font-display text-4xl font-semibold leading-tight tracking-[-0.02em] text-graphite md:text-5xl">
+            So sieht es bei unseren Kunden aus.
+          </h2>
+          <p className="mt-4 text-lg leading-relaxed text-slate">
+            Keine Stockfotos: Anlagen, die unsere Teams in der Region eingebaut
+            haben — draußen sauber aufgestellt, drinnen ordentlich verrohrt.
+          </p>
+        </div>
+        <div role="tablist" aria-label="Fotos filtern" className="flex gap-2">
+          {(["Alle", "Außen", "Innen"] as const).map((f) => (
+            <button
+              key={f}
+              role="tab"
+              aria-selected={filter === f}
+              onClick={() => {
+                setFilter(f)
+                setShowAll(false)
+              }}
+              className={`rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
+                filter === f
+                  ? "border-graphite bg-graphite text-offwhite"
+                  : "border-graphite/15 bg-offwhite text-graphite hover:border-graphite/40"
+              }`}
+            >
+              {f === "Alle" ? "Alle" : f === "Außen" ? "Außeneinheit" : "Technikraum"}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <ul className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+        {visible.map((i, idx) => (
+          <li key={i.src} className="group relative overflow-hidden rounded-2xl bg-softblue">
+            <img
+              src={i.src}
+              alt={`Von H&S installierte Wärmepumpe${i.brand ? ` (${i.brand})` : ""} — ${i.where === "Außen" ? "Außeneinheit" : "Technikraum"}`}
+              loading={idx < 4 ? "eager" : "lazy"}
+              className="aspect-[3/4] w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+            <span className="absolute bottom-3 left-3 rounded-full bg-graphite/80 px-3 py-1 text-xs font-semibold text-offwhite backdrop-blur-sm">
+              {i.brand ? `${i.brand} · ` : ""}
+              {i.where === "Außen" ? "Außen" : "Technikraum"}
+            </span>
+          </li>
+        ))}
+      </ul>
+
+      <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+        {!showAll && items.length > 8 && (
+          <button
+            onClick={() => setShowAll(true)}
+            className="rounded-full border border-graphite/20 px-6 py-3 font-semibold text-graphite transition-colors hover:bg-graphite hover:text-offwhite"
+          >
+            Alle {items.length} Fotos zeigen
+          </button>
+        )}
+        <PrimaryCta href={funnel({ cta: "referenzen" })} cta="referenzen">
+          So eine Anlage anfragen
+        </PrimaryCta>
+      </div>
+    </section>
+  )
+}
+
+/* Aus der bisherigen FAQ: vorhandene Angebote prüfen wir kostenlos. */
+function SecondOpinion({ funnel }: { funnel: FunnelLink }) {
+  return (
+    <section className="mx-auto max-w-7xl px-5 pb-16 md:px-8 md:pb-24">
+      <div className="reveal flex flex-col items-start justify-between gap-6 rounded-3xl border-2 border-dashed border-amber/60 bg-yellow/10 p-7 sm:p-10 lg:flex-row lg:items-center">
+        <div className="max-w-2xl">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-amber">Zweite Meinung</p>
+          <h2 className="mt-2 font-display text-3xl font-semibold leading-tight text-graphite md:text-4xl">
+            Sie haben schon ein Angebot? Wir prüfen es kostenlos.
+          </h2>
+          <p className="mt-3 leading-relaxed text-slate">
+            Schicken Sie uns Ihr vorhandenes Angebot — wir sagen Ihnen ehrlich,
+            ob es passt, und ob wir Ihnen ein attraktiveres machen können.
+          </p>
+        </div>
+        <div className="flex w-full shrink-0 flex-col gap-3 sm:w-auto">
+          <a
+            href={WHATSAPP_HREF}
+            target="_blank"
+            rel="noreferrer"
+            data-cta="zweitmeinung-whatsapp"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-graphite px-7 py-4 font-semibold text-offwhite transition-all hover:-translate-y-0.5 hover:bg-ink"
+          >
+            Angebot per WhatsApp schicken
+          </a>
+          <a
+            href={funnel({ cta: "zweitmeinung" })}
+            data-cta="zweitmeinung"
+            className="inline-flex items-center justify-center rounded-full border border-graphite/25 px-7 py-4 font-semibold text-graphite transition-colors hover:bg-graphite hover:text-offwhite"
+          >
+            Eigenes Angebot anfragen
+          </a>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function Reviews({ funnel }: { funnel: FunnelLink }) {
   return (
     <section className="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-24">
@@ -794,7 +936,9 @@ export default function LandingPage() {
         <Funding funnel={funnel} />
         <StatsBar />
         <Reasons />
+        <Installations funnel={funnel} />
         <Reviews funnel={funnel} />
+        <SecondOpinion funnel={funnel} />
         <Region />
         <Faq />
         <FinalCta funnel={funnel} />
