@@ -81,6 +81,7 @@ const NAV: { label: string; href?: string; to?: string }[] = [
   { label: "Wärmepumpen", to: "/waermepumpen" },
   { label: "Über uns", to: "/ueber-uns" },
   { label: "Wissen", to: "/wissen-und-infos" },
+  { label: "Jobs", to: "/bewerben" },
   { label: "So arbeiten wir", href: `${import.meta.env.BASE_URL}#prozess` },
   { label: "Kontakt", href: "#kontakt" },
 ]
@@ -1389,7 +1390,11 @@ function SeoText() {
 /*  Footer                                                             */
 /* ------------------------------------------------------------------ */
 function Footer() {
-  const socials = ["Instagram", "TikTok", "LinkedIn"]
+  const socials = [
+    { label: "Instagram", href: "https://www.instagram.com/hsenergiesysteme/" },
+    { label: "TikTok", href: "https://www.tiktok.com/@hsenergiesysteme" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/company/hs-energiesysteme" },
+  ]
   return (
     <footer className="border-t border-graphite/10 bg-offwhite">
       <div className="mx-auto max-w-7xl px-5 py-14 md:px-8">
@@ -1414,12 +1419,14 @@ function Footer() {
               <p className="text-sm font-semibold text-graphite">Social</p>
               <ul className="mt-3 space-y-2 text-sm">
                 {socials.map((s) => (
-                  <li key={s}>
+                  <li key={s.label}>
                     <a
-                      href="#"
+                      href={s.href}
+                      target="_blank"
+                      rel="noreferrer"
                       className="text-slate transition-colors duration-200 hover:text-graphite"
                     >
-                      {s}
+                      {s.label}
                     </a>
                   </li>
                 ))}
@@ -1429,12 +1436,20 @@ function Footer() {
               <p className="text-sm font-semibold text-graphite">Rechtliches</p>
               <ul className="mt-3 space-y-2 text-sm">
                 <li>
-                  <a href="#" className="text-slate hover:text-graphite">
+                  <a
+                    href="https://www.hs-energiesysteme.de/rechtliches/impressum"
+                    className="text-slate hover:text-graphite"
+                  >
                     Impressum
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-slate hover:text-graphite">
+                  <a
+                    href="https://drive.google.com/file/d/1NdwHutkYPrtGhyX46zGExjmKN0g-kXiR/view?usp=sharing"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-slate hover:text-graphite"
+                  >
                     Datenschutz
                   </a>
                 </li>
@@ -2708,6 +2723,7 @@ import HeatPumpFundingPage from "./HeatPumpFundingPage"
 import BoschHeatPumpPage from "./BoschHeatPumpPage"
 import DomesticHotWaterHeatPumpPage from "./DomesticHotWaterHeatPumpPage"
 import AirWaterHeatPumpPage from "./AirWaterHeatPumpPage"
+import CareerPage from "./CareerPage"
 
 const router = createBrowserRouter([
   {
@@ -2746,6 +2762,9 @@ const router = createBrowserRouter([
         path: "typen/luft-wasser-warmepumpe",
         Component: LuftWasserWaermepumpeRoute,
       },
+      // Gleiche URL wie die bisherige Live-Seite, damit Links und Rankings erhalten bleiben.
+      { path: "bewerben", Component: CareerPage },
+      { path: "karriere", Component: CareerPage },
       { path: "*", Component: HomePage },
     ],
   },
