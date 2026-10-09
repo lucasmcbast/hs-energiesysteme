@@ -12,7 +12,6 @@ import LandingPage, {
   useLp,
   type LpConfig,
 } from "./LandingPage"
-import fotoVaillant from "./imports/installation-15.webp"
 import logoVaillantPartner from "./imports/vaillant-kompetenzpartner.png"
 import fotoLead from "./imports/andreas-sponsheimer.webp"
 import vWarum from "./imports/vaillant-arotherm-plus-monteur-schieferhaus.webp"
@@ -21,7 +20,10 @@ import vSplitWandQuer from "./imports/vaillant-split-wandkonsole-klinker-quer.we
 import vTechnikraum from "./imports/vaillant-technikraum-speicher.webp"
 import vInbetriebnahme from "./imports/vaillant-split-inbetriebnahme-tablet.webp"
 import vKiesbett from "./imports/vaillant-split-kiesbett-einfamilienhaus.webp"
-import vPlusQuer from "./imports/vaillant-arotherm-anthrazit-putzfassade-quer.webp"
+import vPlusQuer from "./imports/vaillant-arotherm-plus-putzfassade-quer.webp"
+import vPlusHero from "./imports/vaillant-arotherm-plus-einfamilienhaus-garage.webp"
+import vPlusSchiefer from "./imports/vaillant-arotherm-plus-schieferhaus-herbst.webp"
+import vPlusKlinker from "./imports/vaillant-arotherm-plus-klinkerhaus.webp"
 import vInnengeraet from "./imports/vaillant-innengeraet-technikraum-fenster.webp"
 import vReihenhaus from "./imports/vaillant-split-reihenhaus-garten.webp"
 
@@ -292,8 +294,8 @@ export const LP_VAILLANT_SOLINGEN: LpConfig = {
     "Installation in 4–5 Werktagen",
   ],
   heroImage: {
-    src: fotoVaillant,
-    alt: "Von H&S installierte Vaillant aroTHERM Wärmepumpe an einem Wohnhaus",
+    src: vPlusHero,
+    alt: "Vaillant aroTHERM plus Wärmepumpe vor einem Einfamilienhaus",
   },
   heroBadge: (
     <span className="inline-flex items-center rounded-xl border border-vaillant/30 bg-white px-3 py-1.5">
@@ -321,10 +323,11 @@ export const LP_VAILLANT_SOLINGEN: LpConfig = {
   ),
   installations: [
     ...INSTALLATIONS.filter((i) => i.brand === "Vaillant"),
+    { src: vPlusKlinker, where: "Außen", brand: "Vaillant" },
     { src: vKiesbett, where: "Außen", brand: "Vaillant" },
     { src: vReihenhaus, where: "Außen", brand: "Vaillant" },
     { src: vTechnikraum, where: "Innen", brand: "Vaillant" },
-    { where: "Außen", placeholder: "Bild 7: aroTHERM plus an Schieferhaus, Bergisches Land (hoch 3:4)" },
+    { src: vPlusSchiefer, where: "Außen", brand: "Vaillant" },
     { src: vInnengeraet, where: "Innen", brand: "Vaillant" },
     { src: vSplitWand, where: "Außen", brand: "Vaillant" },
     { src: vInbetriebnahme, where: "Außen", brand: "Vaillant" },
