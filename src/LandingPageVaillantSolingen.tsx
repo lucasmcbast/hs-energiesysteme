@@ -13,6 +13,15 @@ import LandingPage, {
   type LpConfig,
 } from "./LandingPage"
 import fotoVaillant from "./imports/installation-15.webp"
+import logoVaillantPartner from "./imports/vaillant-kompetenzpartner.png"
+
+/* TODO: echte Angaben zum Standortleiter Solingen eintragen */
+const LEAD = {
+  name: <Ph>Vorname Nachname</Ph>,
+  role: "Standortleitung Solingen",
+  photoBrief: "Porträt Standortleiter Solingen, H&S-Poloshirt, freundlich, vor Vaillant aroTHERM oder H&S-Fahrzeug — quadratisch, mind. 800 px",
+  quote: <Ph>Kurzes Zitat des Standortleiters, z. B. warum H&amp;S auf Vaillant setzt</Ph>,
+}
 
 /* ------------------------------------------------------------------ */
 /*  Paid-Landingpage: Vaillant Wärmepumpe, Standort Solingen           */
@@ -57,43 +66,66 @@ const MODELS = [
     price: <Ph>ab X € inkl. Montage</Ph>,
   },
   {
-    name: <Ph>aroTHERM Split</Ph>,
+    name: "aroTHERM Split",
     type: "Luft-Wasser · Split",
-    text: <Ph>Nur aufnehmen, wenn H&amp;S die Split-Variante verbaut — sonst Karte entfernen oder durch flexoTHERM ersetzen.</Ph>,
-    facts: [<Ph key="f">Eckdaten</Ph>],
+    text: "Außen- und Inneneinheit sind über Kältemittelleitungen verbunden — die flexible Lösung bei engen oder langen Leitungswegen.",
+    facts: ["schlanke Leitungen", <Ph key="f">Leistungsgrößen in kW</Ph>],
     price: <Ph>ab X € inkl. Montage</Ph>,
   },
 ]
+
+function VaillantQuote() {
+  return (
+    <section className="bg-vaillant text-white">
+      <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 py-14 md:px-8 md:py-20 lg:grid-cols-[auto_1fr]">
+        <div className="rounded-3xl bg-white p-6 shadow-xl shadow-black/10">
+          <img src={logoVaillantPartner} alt="Vaillant Kompetenzpartner. Ausgezeichnet." className="w-64 max-w-full" />
+        </div>
+        <figure>
+          <span className="block h-10 font-display text-7xl leading-none text-yellow" aria-hidden="true">„</span>
+          {/* TODO: nur ein freigegebenes Zitat von Vaillant verwenden (z. B. Gebietsverkaufsleitung) */}
+          <blockquote className="mt-2 font-display text-3xl font-semibold leading-snug md:text-4xl">
+            <Ph>Freigegebenes Zitat von Vaillant über die Zusammenarbeit mit H&amp;S</Ph>
+          </blockquote>
+          <figcaption className="mt-6 text-white/75">
+            <Ph>Name</Ph>, <Ph>Funktion</Ph> · Vaillant Deutschland
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+  )
+}
 
 function VaillantSection() {
   const lp = useLp()
   const funnel = useFunnelLink(lp.funnelParams)
   return (
-    <section className="border-y border-graphite/10 bg-white">
+    <section className="bg-white">
       <div className="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-24">
         <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="reveal">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-amber">Warum Vaillant</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-vaillant">Warum Vaillant</p>
             <h2 className="mt-3 font-display text-4xl font-semibold leading-tight tracking-[-0.02em] text-graphite md:text-5xl">
               Deutsche Markentechnik — installiert vom Meisterbetrieb nebenan.
             </h2>
             <p className="mt-4 text-lg leading-relaxed text-slate">
-              Wir sind <Ph>offizieller Vaillant-Partner / genaues Siegel</Ph> und
-              bauen die Vaillant aroTHERM plus in Solingen und Umgebung ein — mit
-              eigenem Montageteam und festem Ansprechpartner.
+              Als ausgezeichneter <strong className="text-vaillant">Vaillant Kompetenzpartner</strong> bauen
+              wir die Vaillant aroTHERM plus und aroTHERM Split in Solingen und
+              Umgebung ein — mit eigenem Montageteam und festem Ansprechpartner.
             </p>
           </div>
           <ImagePlaceholder
-            brief="Vaillant aroTHERM plus vor einem Einfamilienhaus im Bergischen Land, H&S-Monteur prüft das Gerät — Querformat, mind. 1600 px"
+            brief="Bild 1: Vaillant aroTHERM plus vor Einfamilienhaus im Bergischen Land, H&S-Monteur prüft das Gerät — quer 4:3"
             className="reveal aspect-[4/3] w-full"
           />
         </div>
 
         <div className="knowledge-stagger mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {VAILLANT_REASONS.map((r) => (
-            <div key={r.title} className="reveal rounded-2xl border border-graphite/10 bg-offwhite p-6">
+            <div key={r.title} className="reveal rounded-2xl border border-vaillant/20 bg-vaillant/[0.04] p-6">
               <h3 className="flex items-center gap-3 font-display text-xl font-semibold text-graphite">
-                <CheckIcon /> {r.title}
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-vaillant text-[11px] font-bold text-white">✓</span>
+                {r.title}
               </h3>
               <p className="mt-2 leading-relaxed text-slate">{r.text}</p>
             </div>
@@ -101,32 +133,38 @@ function VaillantSection() {
         </div>
 
         <div className="mt-16">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-amber">Modelle</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-vaillant">Modelle</p>
           <h3 className="mt-3 font-display text-3xl font-semibold text-graphite md:text-4xl">
             Welche Vaillant passt zu Ihrem Haus?
           </h3>
           <div className="mt-8 grid gap-5 md:grid-cols-2">
             {MODELS.map((m, i) => (
-              <article key={i} className="reveal flex flex-col rounded-3xl border border-graphite/10 bg-offwhite p-7">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber">{m.type}</p>
-                <h4 className="mt-2 font-display text-3xl font-semibold text-graphite">{m.name}</h4>
-                <p className="mt-3 flex-1 leading-relaxed text-slate">{m.text}</p>
-                <ul className="mt-5 flex flex-wrap gap-2">
-                  {m.facts.map((f, j) => (
-                    <li key={j} className="rounded-full border border-graphite/15 px-3 py-1 text-sm font-medium text-graphite">
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-6 flex items-end justify-between gap-4 border-t border-graphite/10 pt-5">
-                  <p className="font-display text-2xl font-semibold text-graphite">{m.price}</p>
-                  <a
-                    href={funnel({ cta: `modell-${i}` })}
-                    data-cta={`modell-${i}`}
-                    className="text-sm font-semibold text-graphite underline decoration-yellow decoration-4 underline-offset-4"
-                  >
-                    Angebot anfragen
-                  </a>
+              <article key={i} className="reveal flex flex-col overflow-hidden rounded-3xl border border-graphite/10 bg-offwhite">
+                <ImagePlaceholder
+                  brief={i === 0 ? "Bild 2: aroTHERM plus freigestellt oder vor heller Hauswand — quer 16:9" : "Bild 3: aroTHERM Split Außeneinheit an Hauswand — quer 16:9"}
+                  className="aspect-[16/9] w-full rounded-none border-0 border-b-2"
+                />
+                <div className="flex flex-1 flex-col p-7">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-vaillant">{m.type}</p>
+                  <h4 className="mt-2 font-display text-3xl font-semibold text-graphite">{m.name}</h4>
+                  <p className="mt-3 flex-1 leading-relaxed text-slate">{m.text}</p>
+                  <ul className="mt-5 flex flex-wrap gap-2">
+                    {m.facts.map((f, j) => (
+                      <li key={j} className="rounded-full border border-vaillant/25 px-3 py-1 text-sm font-medium text-graphite">
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-6 flex items-end justify-between gap-4 border-t border-graphite/10 pt-5">
+                    <p className="font-display text-2xl font-semibold text-graphite">{m.price}</p>
+                    <a
+                      href={funnel({ cta: `modell-${i}` })}
+                      data-cta={`modell-${i}`}
+                      className="text-sm font-semibold text-graphite underline decoration-yellow decoration-4 underline-offset-4"
+                    >
+                      Angebot anfragen
+                    </a>
+                  </div>
                 </div>
               </article>
             ))}
@@ -141,6 +179,45 @@ function VaillantSection() {
             Vaillant-Angebot anfragen
           </PrimaryCta>
           <Microcopy />
+        </div>
+      </div>
+    </section>
+  )
+}
+
+/* Standortleiter prominent: persönliches Gesicht für Solingen */
+function LocationLead() {
+  const lp = useLp()
+  const funnel = useFunnelLink(lp.funnelParams)
+  return (
+    <section className="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-24">
+      <div className="reveal grid overflow-hidden rounded-3xl border border-graphite/10 bg-offwhite md:grid-cols-[0.8fr_1.2fr]">
+        <ImagePlaceholder brief={LEAD.photoBrief} className="aspect-square h-full w-full rounded-none border-0 md:border-r-2" />
+        <div className="flex flex-col justify-center p-8 md:p-12">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-vaillant">Ihr Ansprechpartner in Solingen</p>
+          <p className="mt-4 font-display text-3xl font-semibold leading-snug text-graphite md:text-4xl">
+            „{LEAD.quote}“
+          </p>
+          <p className="mt-6 font-semibold text-graphite">
+            {LEAD.name}
+            <span className="block text-sm font-medium text-slate">{LEAD.role} · H&amp;S Energiesysteme</span>
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <a
+              href={funnel({ cta: "standortleiter" })}
+              data-cta="standortleiter"
+              className="inline-flex items-center gap-2 rounded-full bg-yellow px-6 py-3.5 font-semibold text-graphite transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-yellow/30"
+            >
+              Beratung in Solingen anfragen
+            </a>
+            <a
+              href={lp.phone.href}
+              data-cta="standortleiter-phone"
+              className="inline-flex items-center rounded-full border border-graphite/20 px-6 py-3.5 font-semibold text-graphite transition-colors hover:bg-graphite hover:text-offwhite"
+            >
+              {lp.phone.display}
+            </a>
+          </div>
         </div>
       </div>
     </section>
@@ -200,18 +277,40 @@ export const LP_VAILLANT_SOLINGEN: LpConfig = {
     alt: "Von H&S installierte Vaillant aroTHERM Wärmepumpe an einem Wohnhaus",
   },
   heroBadge: (
-    <span className="inline-flex items-center rounded-full border border-dashed border-amber/70 bg-yellow/15 px-3.5 py-1.5 text-[13px] font-semibold text-slate">
-      <Ph>Vaillant-Partnersiegel</Ph>
+    <span className="inline-flex items-center rounded-xl border border-vaillant/30 bg-white px-3 py-1.5">
+      <img src={logoVaillantPartner} alt="Vaillant Kompetenzpartner. Ausgezeichnet." className="h-10 w-auto md:h-11" />
     </span>
+  ),
+  heroCard: (
+    <div className="absolute -bottom-6 left-4 right-4 flex items-center gap-4 rounded-2xl border border-graphite/10 bg-offwhite p-4 shadow-xl shadow-graphite/10 sm:left-auto sm:right-[-1rem] sm:w-80">
+      <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-2 border-dashed border-amber/70 bg-yellow/15 text-[10px] font-semibold uppercase text-amber">
+        Foto
+      </span>
+      <span className="text-sm leading-snug">
+        <span className="block text-xs font-semibold uppercase tracking-[0.14em] text-vaillant">Ihr Ansprechpartner</span>
+        <span className="block font-semibold text-graphite">{LEAD.name}</span>
+        <span className="block text-slate">{LEAD.role}</span>
+      </span>
+    </div>
   ),
   calculatorTitle: "Was kostet Ihre Vaillant Wärmepumpe?",
   showLogoStrip: false,
-  brand: <VaillantSection />,
+  brand: (
+    <>
+      <VaillantQuote />
+      <VaillantSection />
+      <LocationLead />
+    </>
+  ),
   installations: [
     ...INSTALLATIONS.filter((i) => i.brand === "Vaillant"),
-    { where: "Außen", placeholder: "Vaillant aroTHERM plus, Außeneinheit — echte Installation in Solingen/Umgebung (hochkant 3:4)" },
-    { where: "Innen", placeholder: "Vaillant Inneneinheit / uniTOWER im Technikraum (hochkant 3:4)" },
-    { where: "Außen", placeholder: "Vaillant aroTHERM plus im Garten eines Reihenhauses (hochkant 3:4)" },
+    { where: "Außen", placeholder: "Bild 4: aroTHERM plus am Einfamilienhaus mit Kiesbett (hoch 3:4)" },
+    { where: "Außen", placeholder: "Bild 5: aroTHERM plus im Garten eines Reihenhauses (hoch 3:4)" },
+    { where: "Innen", placeholder: "Bild 6: Vaillant uniTOWER im Technikraum (hoch 3:4)" },
+    { where: "Außen", placeholder: "Bild 7: aroTHERM plus an Schieferhaus, Bergisches Land (hoch 3:4)" },
+    { where: "Innen", placeholder: "Bild 8: Vaillant Inneneinheit mit Speicher, sauber verrohrt (hoch 3:4)" },
+    { where: "Außen", placeholder: "Bild 9: aroTHERM Split Außeneinheit an Hauswand (hoch 3:4)" },
+    { where: "Außen", placeholder: "Bild 10: H&S-Monteur bei Inbetriebnahme einer aroTHERM plus (hoch 3:4)" },
   ],
   // TODO: Bewertungen aus Solingen / mit Vaillant-Anlage, sobald vorhanden
   reviews: REVIEWS,

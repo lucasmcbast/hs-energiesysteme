@@ -16,6 +16,7 @@
   --color-bluegray: #c1c8d0; /* Blue-Gray      RGB 193 200 208 */
   --color-softgreen: #d8dcd4; /* Soft Green Gray RGB 216 220 212 */
   --color-softblue: #e3e7ef; /* Soft Blue-Gray  RGB 227 231 239 */
+  --color-vaillant: #006571; /* Vaillant-Petrol — nur auf Vaillant-Kampagnenseiten */
 
   --font-display: 'Newsreader', Georgia, serif;
   --font-body: 'Hanken Grotesk', system-ui, sans-serif;

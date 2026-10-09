@@ -260,6 +260,8 @@ export type LpConfig = {
   heroBullets: ReactNode[]
   heroImage: { src: string; alt: string; position?: string }
   heroBadge?: ReactNode
+  /* Ersetzt die Zahlen-Karte am Hero-Bild (z. B. Ansprechpartner vor Ort) */
+  heroCard?: ReactNode
   calculatorTitle: string
   showLogoStrip: boolean
   brand?: ReactNode
@@ -482,6 +484,7 @@ function Hero({ funnel }: { funnel: FunnelLink }) {
             alt={lp.heroImage.alt}
             className={`aspect-[4/5] w-full rounded-3xl object-cover shadow-2xl shadow-graphite/10 ${lp.heroImage.position ?? ""}`}
           />
+          {lp.heroCard ?? (
           <div className="absolute -bottom-5 left-4 right-4 grid grid-cols-2 gap-2 rounded-2xl border border-graphite/10 bg-offwhite p-4 shadow-xl shadow-graphite/10 sm:left-auto sm:right-[-1rem] sm:w-72">
             {TRUST_STATS.slice(0, 2).map((s) => (
               <div key={s.label}>
@@ -490,6 +493,7 @@ function Hero({ funnel }: { funnel: FunnelLink }) {
               </div>
             ))}
           </div>
+          )}
         </div>
       </div>
     </section>
