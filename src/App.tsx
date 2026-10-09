@@ -2728,6 +2728,7 @@ import BuderusHeatPumpPage from "./BuderusHeatPumpPage"
 import DomesticHotWaterHeatPumpPage from "./DomesticHotWaterHeatPumpPage"
 import AirWaterHeatPumpPage from "./AirWaterHeatPumpPage"
 import CareerPage from "./CareerPage"
+import TopicArticlePage, { ARTICLES as TOPIC_ARTICLES } from "./TopicArticlePage"
 import LandingPage from "./LandingPage"
 import LandingPageVaillantSolingen from "./LandingPageVaillantSolingen"
 
@@ -2781,6 +2782,16 @@ const router = createBrowserRouter([
         path: "typen/luft-wasser-warmepumpe",
         Component: LuftWasserWaermepumpeRoute,
       },
+      // Blog „Aktuelle Themen“ – Slugs wie auf der bisherigen Live-Seite.
+      ...TOPIC_ARTICLES.map((article) => ({
+        path: `aktuelle-themen/${article.slug}`,
+        Component: () => (
+          <>
+            <TopicArticlePage slug={article.slug} />
+            <Contact />
+          </>
+        ),
+      })),
       // Gleiche URL wie die bisherige Live-Seite, damit Links und Rankings erhalten bleiben.
       { path: "bewerben", Component: CareerPage },
       { path: "karriere", Component: CareerPage },

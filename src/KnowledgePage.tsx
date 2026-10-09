@@ -3,6 +3,7 @@ import logoBosch from "./imports/Bosch_Logo.png"
 import logoViessmann from "./imports/Viessmann_Logo.png"
 import logoVaillant from "./imports/vaillant-logo.png"
 import logoBuderus from "./imports/buderus-logo.png"
+import { ARTICLES as TOPIC_ARTICLES } from "./TopicArticlePage"
 
 type Article = {
   title: string
@@ -195,11 +196,12 @@ function TopicNavigation() {
     ["02", "Kosten & Förderung", "#kosten"],
     ["03", "Hersteller", "#hersteller"],
     ["04", "Wärmepumpen-Typen", "#typen"],
+    ["05", "Aktuelle Themen", "#aktuelles"],
   ]
 
   return (
     <section id="themen" className="border-y border-graphite/10 bg-softblue/30">
-      <div className="mx-auto grid max-w-7xl px-5 sm:grid-cols-2 md:px-8 lg:grid-cols-4">
+      <div className="mx-auto grid max-w-7xl px-5 sm:grid-cols-2 md:px-8 lg:grid-cols-5">
         {topics.map(([number, title, href], index) => (
           <a
             key={title}
@@ -460,6 +462,58 @@ function Types() {
   )
 }
 
+function CurrentTopics() {
+  return (
+    <section
+      id="aktuelles"
+      className="border-b border-graphite/10 bg-softblue/30 py-20 md:py-28"
+    >
+      <div className="mx-auto max-w-7xl px-5 md:px-8">
+        <div className="reveal max-w-3xl">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-amber">
+            Aktuelle Themen
+          </p>
+          <h2 className="mt-3 font-display text-4xl font-semibold leading-tight tracking-[-0.02em] text-graphite md:text-5xl">
+            Was sich gerade bei Heizung und Förderung tut.
+          </h2>
+        </div>
+
+        <div className="knowledge-stagger mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {TOPIC_ARTICLES.map((article) => (
+            <Link
+              key={article.slug}
+              to={`/aktuelle-themen/${article.slug}`}
+              className="reveal group flex flex-col overflow-hidden rounded-2xl border border-graphite/10 bg-offwhite transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-graphite/10"
+            >
+              <img
+                src={article.image}
+                alt={article.imageAlt}
+                className="aspect-[4/3] w-full object-cover"
+                loading="lazy"
+              />
+              <div className="flex flex-1 flex-col p-6">
+                <span className="text-xs font-semibold uppercase tracking-[0.18em] text-amber">
+                  {article.label}
+                </span>
+                <h3 className="mt-3 font-display text-xl font-semibold leading-tight text-graphite">
+                  {article.title}
+                </h3>
+                <p className="mt-3 text-sm leading-relaxed text-slate">
+                  {article.teaser}
+                </p>
+                <span className="mt-auto flex items-center justify-between border-t border-graphite/10 pt-4 text-sm">
+                  <span className="text-slate">Stand {article.updated}</span>
+                  <ArrowIcon className="h-4 w-4 text-graphite transition-transform duration-200 group-hover:translate-x-1" />
+                </span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function ConsultationBand() {
   return (
     <section className="bg-yellow">
@@ -498,6 +552,7 @@ export default function KnowledgePage() {
       <Finance />
       <Manufacturers />
       <Types />
+      <CurrentTopics />
       <ConsultationBand />
     </>
   )
