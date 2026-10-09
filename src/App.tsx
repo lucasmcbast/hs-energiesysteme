@@ -2649,6 +2649,33 @@ function BoschWaermepumpeRoute() {
   )
 }
 
+function VaillantWaermepumpeRoute() {
+  return (
+    <>
+      <VaillantHeatPumpPage />
+      <Contact />
+    </>
+  )
+}
+
+function ViessmannWaermepumpeRoute() {
+  return (
+    <>
+      <ViessmannHeatPumpPage />
+      <Contact />
+    </>
+  )
+}
+
+function BuderusWaermepumpeRoute() {
+  return (
+    <>
+      <BuderusHeatPumpPage />
+      <Contact />
+    </>
+  )
+}
+
 function WarmwasserWaermepumpeRoute() {
   return (
     <>
@@ -2695,6 +2722,9 @@ import HowHeatPumpWorksPage from "./HowHeatPumpWorksPage"
 import HeatPumpElectricityPage from "./HeatPumpElectricityPage"
 import HeatPumpFundingPage from "./HeatPumpFundingPage"
 import BoschHeatPumpPage from "./BoschHeatPumpPage"
+import VaillantHeatPumpPage from "./VaillantHeatPumpPage"
+import ViessmannHeatPumpPage from "./ViessmannHeatPumpPage"
+import BuderusHeatPumpPage from "./BuderusHeatPumpPage"
 import DomesticHotWaterHeatPumpPage from "./DomesticHotWaterHeatPumpPage"
 import AirWaterHeatPumpPage from "./AirWaterHeatPumpPage"
 import CareerPage from "./CareerPage"
@@ -2729,6 +2759,19 @@ const router = createBrowserRouter([
       {
         path: "hersteller/bosch-waermepumpe",
         Component: BoschWaermepumpeRoute,
+      },
+      // Gleiche URLs (inkl. Schreibweise) wie die bisherige Live-Seite.
+      {
+        path: "hersteller/vaillant-warmepumpe",
+        Component: VaillantWaermepumpeRoute,
+      },
+      {
+        path: "hersteller/viessmann-waermepumpe",
+        Component: ViessmannWaermepumpeRoute,
+      },
+      {
+        path: "hersteller/buderus-warmepumpe",
+        Component: BuderusWaermepumpeRoute,
       },
       {
         path: "typen/warmwasser-waermepumpe",
