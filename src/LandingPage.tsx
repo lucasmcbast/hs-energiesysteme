@@ -65,13 +65,14 @@ function useFunnelLink() {
 
 type FunnelLink = ReturnType<typeof useFunnelLink>
 
-/* Erste Funnel-Frage direkt im Hero: ein Klick = Einstieg in den Funnel.
-   TODO: prüfen, ob Heyflow ?heizung= vorbelegt; sonst landet man einfach am Start. */
-const HEATING_OPTIONS = [
-  { id: "gas", label: "Gas", icon: "M12 3c1 3.5 5 5.5 5 10a5 5 0 01-10 0c0-2.5 1.5-4 2.5-5 0 2 1 3 2 3.5C11 9 11 6 12 3z" },
-  { id: "oel", label: "Öl", icon: "M12 3s6 6.5 6 11a6 6 0 01-12 0c0-4.5 6-11 6-11z" },
-  { id: "nachtspeicher", label: "Nachtspeicher", icon: "M13 2L5 13h6l-1 9 8-11h-6l1-9z" },
-  { id: "andere", label: "Andere", icon: "M5 12h.01M12 12h.01M19 12h.01" },
+/* Erste Funnel-Frage auf der Seite — identisch mit Frage 1 im Heyflow, damit sie dort
+   übersprungen werden kann. Die Antwort geht als ?gebaeudeart=<id> mit.
+   TODO: Parametername und Werte mit dem versteckten Heyflow-Feld abgleichen. */
+const BUILDING_OPTIONS = [
+  { id: "einfamilienhaus", label: "Einfamilienhaus", icon: "M3 11l9-7 9 7M5 9.5V20h5v-6h4v6h5V9.5" },
+  { id: "doppelhaushaelfte-reihenhaus", label: "Doppelhaushälfte oder Reihenhaus", icon: "M2 12l5-4.5 5 4.5 5-4.5 5 4.5M3.5 11v9h17v-9M12 11.5V20M6 20v-4h2v4M16 20v-4h2v4" },
+  { id: "mehrfamilienhaus", label: "Mehrfamilienhaus", icon: "M4 21V8l8-5 8 5v13M4 21h16M8 11h2M14 11h2M8 15h2M14 15h2M10 21v-3h4v3" },
+  { id: "sonstiges", label: "Sonstiges", icon: "M12 3l7.5 6.5h-15L12 3zM6 9.5V18h12V9.5M12 11.5a2 2 0 110 4 2 2 0 010-4zM12 18v3" },
 ]
 
 const HERO_BULLETS = [
@@ -290,23 +291,30 @@ function Microcopy({ dark = false }: { dark?: boolean }) {
 }
 
 /* Dringlichkeit — nur belegbare Fakten: Kürzung zum 21.07.2026, Antrag vor Auftragsbeginn. */
-function UrgencyBanner({ funnel }: { funnel: FunnelLink }) {
+function UrgencyBand({ funnel }: { funnel: FunnelLink }) {
   return (
-    <a
-      href={funnel({ cta: "banner" })}
-      data-cta="banner"
-      className="block bg-graphite px-5 py-2.5 text-center text-sm text-offwhite transition-colors hover:bg-ink"
-    >
-      <span className="mr-2 inline-block rounded-full bg-yellow px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-graphite">
-        Förderung 2026
-      </span>
-      <span className="hidden sm:inline">Die Förderung wurde zum 21.07.2026 bereits gekürzt — jetzt die aktuellen Sätze sichern. </span>
-      <span className="sm:hidden">Bereits gekürzt — aktuelle Sätze sichern. </span>
-      <span className="font-semibold text-yellow underline underline-offset-2">
-        <span className="hidden sm:inline">Förder-Check starten</span>
-        <span className="sm:hidden">Prüfen</span>
-      </span>
-    </a>
+    <section className="bg-graphite text-offwhite">
+      <div className="mx-auto flex max-w-7xl flex-col items-start gap-4 px-5 py-6 md:flex-row md:items-center md:justify-between md:px-8">
+        <div className="flex items-start gap-4">
+          <span className="mt-0.5 shrink-0 rounded-full bg-yellow px-3 py-1 text-xs font-bold uppercase tracking-wide text-graphite">
+            Förderung 2026
+          </span>
+          <p className="text-base leading-relaxed md:text-lg">
+            <strong className="font-semibold text-yellow">Die Förderung wurde zum 21.07.2026 bereits gekürzt.</strong>{" "}
+            <span className="text-offwhite/80">
+              Der Antrag muss vor Auftragsbeginn gestellt werden — sichern Sie sich jetzt die aktuellen Sätze.
+            </span>
+          </p>
+        </div>
+        <a
+          href={funnel({ cta: "dringlichkeit" })}
+          data-cta="dringlichkeit"
+          className="inline-flex shrink-0 items-center gap-2 rounded-full bg-yellow px-6 py-3 font-semibold text-graphite transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-yellow/30"
+        >
+          Förder-Check starten <ArrowIcon className="h-4 w-4" />
+        </a>
+      </div>
+    </section>
   )
 }
 
@@ -437,15 +445,15 @@ function PriceCalculator({ funnel }: { funnel: FunnelLink }) {
         <div className="rounded-3xl bg-offwhite p-6 shadow-2xl shadow-graphite/15 sm:p-9">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber">Frage 1</p>
           <p className="mt-2 font-display text-2xl font-semibold text-graphite sm:text-3xl">
-            Womit heizen Sie aktuell?
+            Um welche Gebäudeart handelt es sich?
           </p>
           <div className="mt-6 grid grid-cols-2 gap-3">
-            {HEATING_OPTIONS.map((o) => (
+            {BUILDING_OPTIONS.map((o) => (
               <a
                 key={o.id}
-                href={funnel({ heizung: o.id, cta: "rechner-heizung" })}
-                data-cta={`rechner-heizung-${o.id}`}
-                className="group flex flex-col items-center gap-3 rounded-2xl border-2 border-graphite/10 bg-offwhite px-3 py-5 text-center font-semibold text-graphite transition-all duration-200 hover:-translate-y-0.5 hover:border-yellow hover:bg-yellow/15 hover:shadow-lg hover:shadow-yellow/20"
+                href={funnel({ gebaeudeart: o.id, cta: "rechner-gebaeude" })}
+                data-cta={`rechner-gebaeude-${o.id}`}
+                className="group flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-graphite/10 bg-offwhite px-3 py-5 text-center font-semibold leading-snug text-graphite transition-all duration-200 hover:-translate-y-0.5 hover:border-yellow hover:bg-yellow/15 hover:shadow-lg hover:shadow-yellow/20"
               >
                 <span className="flex h-12 w-12 items-center justify-center rounded-full bg-yellow/30 text-graphite transition-colors group-hover:bg-yellow">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -959,10 +967,10 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-full bg-offwhite">
-      <UrgencyBanner funnel={funnel} />
       <LpHeader funnel={funnel} />
       <main>
         <Hero funnel={funnel} />
+        <UrgencyBand funnel={funnel} />
         <PriceCalculator funnel={funnel} />
         <LogoStrip />
         <HowItWorks funnel={funnel} />
