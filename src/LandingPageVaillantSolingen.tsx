@@ -14,6 +14,11 @@ import LandingPage, {
 } from "./LandingPage"
 import fotoVaillant from "./imports/installation-15.webp"
 import logoVaillantPartner from "./imports/vaillant-kompetenzpartner.png"
+import vWarum from "./imports/vaillant-arotherm-plus-monteur-schieferhaus.webp"
+import vSplitWand from "./imports/vaillant-split-wandkonsole-klinker.webp"
+import vSplitWandQuer from "./imports/vaillant-split-wandkonsole-klinker-quer.webp"
+import vTechnikraum from "./imports/vaillant-technikraum-speicher.webp"
+import vInbetriebnahme from "./imports/vaillant-split-inbetriebnahme-tablet.webp"
 
 /* TODO: echte Angaben zum Standortleiter Solingen eintragen */
 const LEAD = {
@@ -114,9 +119,11 @@ function VaillantSection() {
               Umgebung ein — mit eigenem Montageteam und festem Ansprechpartner.
             </p>
           </div>
-          <ImagePlaceholder
-            brief="Bild 1: Vaillant aroTHERM plus vor Einfamilienhaus im Bergischen Land, H&S-Monteur prüft das Gerät — quer 4:3"
-            className="reveal aspect-[4/3] w-full"
+          <img
+            src={vWarum}
+            alt="Monteur prüft die Anschlüsse einer Vaillant aroTHERM plus an einem Schieferhaus im Bergischen Land"
+            loading="lazy"
+            className="reveal aspect-[4/3] w-full rounded-3xl object-cover shadow-xl shadow-graphite/10"
           />
         </div>
 
@@ -140,10 +147,19 @@ function VaillantSection() {
           <div className="mt-8 grid gap-5 md:grid-cols-2">
             {MODELS.map((m, i) => (
               <article key={i} className="reveal flex flex-col overflow-hidden rounded-3xl border border-graphite/10 bg-offwhite">
-                <ImagePlaceholder
-                  brief={i === 0 ? "Bild 2: aroTHERM plus freigestellt oder vor heller Hauswand — quer 16:9" : "Bild 3: aroTHERM Split Außeneinheit an Hauswand — quer 16:9"}
-                  className="aspect-[16/9] w-full rounded-none border-0 border-b-2"
-                />
+                {i === 0 ? (
+                  <ImagePlaceholder
+                    brief="Bild 2: aroTHERM plus freigestellt oder vor heller Hauswand — quer 16:9"
+                    className="aspect-[16/9] w-full rounded-none border-0 border-b-2"
+                  />
+                ) : (
+                  <img
+                    src={vSplitWandQuer}
+                    alt="Vaillant aroTHERM Split plus an einer Wandkonsole an einem Klinkerhaus"
+                    loading="lazy"
+                    className="aspect-[16/9] w-full object-cover"
+                  />
+                )}
                 <div className="flex flex-1 flex-col p-7">
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-vaillant">{m.type}</p>
                   <h4 className="mt-2 font-display text-3xl font-semibold text-graphite">{m.name}</h4>
@@ -306,11 +322,11 @@ export const LP_VAILLANT_SOLINGEN: LpConfig = {
     ...INSTALLATIONS.filter((i) => i.brand === "Vaillant"),
     { where: "Außen", placeholder: "Bild 4: aroTHERM plus am Einfamilienhaus mit Kiesbett (hoch 3:4)" },
     { where: "Außen", placeholder: "Bild 5: aroTHERM plus im Garten eines Reihenhauses (hoch 3:4)" },
-    { where: "Innen", placeholder: "Bild 6: Vaillant uniTOWER im Technikraum (hoch 3:4)" },
+    { src: vTechnikraum, where: "Innen", brand: "Vaillant" },
     { where: "Außen", placeholder: "Bild 7: aroTHERM plus an Schieferhaus, Bergisches Land (hoch 3:4)" },
     { where: "Innen", placeholder: "Bild 8: Vaillant Inneneinheit mit Speicher, sauber verrohrt (hoch 3:4)" },
-    { where: "Außen", placeholder: "Bild 9: aroTHERM Split Außeneinheit an Hauswand (hoch 3:4)" },
-    { where: "Außen", placeholder: "Bild 10: H&S-Monteur bei Inbetriebnahme einer aroTHERM plus (hoch 3:4)" },
+    { src: vSplitWand, where: "Außen", brand: "Vaillant" },
+    { src: vInbetriebnahme, where: "Außen", brand: "Vaillant" },
   ],
   // TODO: Bewertungen aus Solingen / mit Vaillant-Anlage, sobald vorhanden
   reviews: REVIEWS,
