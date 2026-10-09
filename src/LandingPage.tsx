@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react"
 import { useLocation } from "react-router"
 import useReveal from "./useReveal"
 import { ArrowIcon } from "./SeoArticlePage"
@@ -48,8 +48,9 @@ const GOOGLE_REVIEW_COUNT = 107
    Leads in Heyflow/Ads der richtigen Kampagne zugeordnet bleiben. */
 const PASSTHROUGH = /^(utm_\w+|gclid|gbraid|wbraid|fbclid|msclkid|ttclid|li_fat_id)$/
 
-function useFunnelLink() {
+function useFunnelLink(defaults: Record<string, string> = {}) {
   const { search } = useLocation()
+  const defaultsKey = JSON.stringify(defaults)
   return useMemo(() => {
     const incoming = new URLSearchParams(search)
     return (extra: Record<string, string> = {}) => {
@@ -57,10 +58,11 @@ function useFunnelLink() {
       incoming.forEach((value, key) => {
         if (PASSTHROUGH.test(key)) url.searchParams.set(key, value)
       })
-      Object.entries(extra).forEach(([k, v]) => url.searchParams.set(k, v))
+      Object.entries({ ...defaults, ...extra }).forEach(([k, v]) => url.searchParams.set(k, v))
       return url.toString()
     }
-  }, [search])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search, defaultsKey])
 }
 
 type FunnelLink = ReturnType<typeof useFunnelLink>
@@ -184,7 +186,9 @@ const GALLERY = [
 
 
 /* Echte Anlagen von H&S (aus der bisherigen Landingpage). Marke nur, wo sie am Gerät sichtbar ist. */
-const INSTALLATIONS: { src: string; where: "Außen" | "Innen"; brand?: string }[] = [
+type Installation = { src?: string; where: "Außen" | "Innen"; brand?: string; placeholder?: string }
+
+const INSTALLATIONS: Installation[] = [
   { src: inst1, where: "Außen", brand: "Buderus" },
   { src: inst2, where: "Außen", brand: "Bosch" },
   { src: inst15, where: "Außen", brand: "Vaillant" },
@@ -239,6 +243,78 @@ const FAQS = [
     a: "Im Umkreis von rund 50 km um unsere Standorte in Willich, Köln und Solingen — vom Niederrhein bis ins Rheinland, u. a. Düsseldorf, Krefeld, Mönchengladbach, Duisburg, Erkelenz und Bonn.",
   },
 ]
+
+/* ------------------------------------------------------------------ */
+/*  Varianten: gleiche Seite, andere Inhalte (Hauptseite, Marke, Ort)  */
+/* ------------------------------------------------------------------ */
+
+type Review = (typeof REVIEWS)[number]
+type FaqItem = { q: string; a: ReactNode }
+
+export type LpConfig = {
+  documentTitle: string
+  funnelParams: Record<string, string>
+  phone: { display: string; href: string }
+  heroTitle: { before: string; marker: string }
+  heroText: ReactNode
+  heroBullets: ReactNode[]
+  heroImage: { src: string; alt: string; position?: string }
+  heroBadge?: ReactNode
+  calculatorTitle: string
+  showLogoStrip: boolean
+  brand?: ReactNode
+  installations: Installation[]
+  reviews: Review[]
+  region: { text: ReactNode; cities: string[] }
+  faqs: FaqItem[]
+  finalTitle: string
+}
+
+/* Deutlich markierter Platzhalter für Inhalte, die noch geliefert werden. */
+export function Ph({ children }: { children: ReactNode }) {
+  return (
+    <mark className="rounded bg-yellow/40 px-1 text-inherit ring-1 ring-amber/60 [box-decoration-break:clone]">
+      [{children}]
+    </mark>
+  )
+}
+
+export function ImagePlaceholder({ brief, className = "" }: { brief: string; className?: string }) {
+  return (
+    <div className={`flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-amber/70 bg-yellow/10 p-6 text-center ${className}`}>
+      <span className="flex h-11 w-11 items-center justify-center rounded-full bg-yellow text-xl text-graphite">+</span>
+      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-amber">Bild folgt</p>
+      <p className="max-w-xs text-sm leading-snug text-slate">{brief}</p>
+    </div>
+  )
+}
+
+export const LP_NRW: LpConfig = {
+  documentTitle: "Wärmepumpe vom Meisterbetrieb in NRW – kostenloses Angebot | H&S",
+  funnelParams: {},
+  phone: { display: PHONE_DISPLAY, href: PHONE_HREF },
+  heroTitle: { before: "Ihre Wärmepumpe vom", marker: "Meisterbetrieb aus NRW." },
+  heroText: "Beratung, Förderantrag und Installation aus einer Hand — von Ihrem regionalen Fachbetrieb aus Willich, Köln und Solingen.",
+  heroBullets: HERO_BULLETS,
+  heroImage: {
+    src: heroFoto,
+    alt: "H&S Fachkraft neben einer frisch installierten Luft-Wasser-Wärmepumpe",
+    position: "object-[60%_center]",
+  },
+  calculatorTitle: "Was kostet Ihre Wärmepumpe?",
+  showLogoStrip: true,
+  installations: INSTALLATIONS,
+  reviews: REVIEWS,
+  region: {
+    text: "Mit über 80 Mitarbeitenden sind wir im Umkreis von rund 50 km um Willich, Köln und Solingen für Sie da.",
+    cities: ["Willich", "Köln", "Solingen", "Düsseldorf", "Krefeld", "Mönchengladbach", "Duisburg", "Viersen", "Bonn", "Erkelenz"],
+  },
+  faqs: FAQS,
+  finalTitle: "Jetzt kostenloses Angebot für Ihre Wärmepumpe sichern.",
+}
+
+const LpContext = createContext<LpConfig>(LP_NRW)
+const useLp = () => useContext(LpContext)
 
 /* ------------------------------------------------------------------ */
 /*  Bausteine                                                          */
@@ -319,17 +395,18 @@ function UrgencyBand({ funnel }: { funnel: FunnelLink }) {
 }
 
 function LpHeader({ funnel }: { funnel: FunnelLink }) {
+  const { phone } = useLp()
   return (
     <header className="sticky top-0 z-50 border-b border-graphite/10 bg-offwhite/95 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3 md:px-8">
         <img src={logoDark} alt="H&S Energiesysteme" className="h-7 w-auto md:h-8" />
         <div className="flex items-center gap-3">
           <a
-            href={PHONE_HREF}
+            href={phone.href}
             data-cta="header-phone"
             className="hidden items-center gap-2 text-sm font-semibold text-graphite sm:inline-flex"
           >
-            <span className="text-slate">Fragen?</span> {PHONE_DISPLAY}
+            <span className="text-slate">Fragen?</span> {phone.display}
           </a>
           <a
             href={funnel({ cta: "header" })}
@@ -345,6 +422,7 @@ function LpHeader({ funnel }: { funnel: FunnelLink }) {
 }
 
 function Hero({ funnel }: { funnel: FunnelLink }) {
+  const lp = useLp()
   return (
     <section className="relative overflow-hidden">
       <div
@@ -358,26 +436,28 @@ function Hero({ funnel }: { funnel: FunnelLink }) {
       />
       <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-5 pb-14 pt-10 md:px-8 md:pb-20 md:pt-16 lg:grid-cols-[1.1fr_0.9fr]">
         <div>
-          <a
-            href={GOOGLE_REVIEWS_HREF}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-full border border-graphite/15 bg-offwhite px-3.5 py-1.5 text-[13px] font-semibold text-slate"
-          >
-            <span className="font-display text-base font-semibold text-graphite">{GOOGLE_RATING}</span>
-            <Stars /> {GOOGLE_REVIEW_COUNT} Google-Bewertungen
-          </a>
+          <div className="flex flex-wrap items-center gap-2">
+            <a
+              href={GOOGLE_REVIEWS_HREF}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-graphite/15 bg-offwhite px-3.5 py-1.5 text-[13px] font-semibold text-slate"
+            >
+              <span className="font-display text-base font-semibold text-graphite">{GOOGLE_RATING}</span>
+              <Stars /> {GOOGLE_REVIEW_COUNT} Google-Bewertungen
+            </a>
+            {lp.heroBadge}
+          </div>
           <h1 className="mt-5 font-display text-[2.5rem] font-semibold leading-[1.03] tracking-[-0.02em] text-graphite sm:text-6xl md:text-[4rem]">
-            Ihre Wärmepumpe vom{" "}
-            <span className="marker">Meisterbetrieb aus NRW.</span>
+            {lp.heroTitle.before}{" "}
+            <span className="marker">{lp.heroTitle.marker}</span>
           </h1>
           <p className="mt-5 max-w-xl text-lg leading-relaxed text-slate">
-            Beratung, Förderantrag und Installation aus einer Hand — von Ihrem
-            regionalen Fachbetrieb aus Willich, Köln und Solingen.
+            {lp.heroText}
           </p>
           <ul className="mt-6 grid gap-2.5 sm:grid-cols-2">
-            {HERO_BULLETS.map((b) => (
-              <li key={b} className="flex gap-2.5 text-[15px] font-medium text-graphite">
+            {lp.heroBullets.map((b, i) => (
+              <li key={i} className="flex gap-2.5 text-[15px] font-medium text-graphite">
                 <CheckIcon />
                 {b}
               </li>
@@ -398,9 +478,9 @@ function Hero({ funnel }: { funnel: FunnelLink }) {
 
         <div className="relative">
           <img
-            src={heroFoto}
-            alt="H&S Fachkraft neben einer frisch installierten Luft-Wasser-Wärmepumpe"
-            className="aspect-[4/5] w-full rounded-3xl object-cover object-[60%_center] shadow-2xl shadow-graphite/10"
+            src={lp.heroImage.src}
+            alt={lp.heroImage.alt}
+            className={`aspect-[4/5] w-full rounded-3xl object-cover shadow-2xl shadow-graphite/10 ${lp.heroImage.position ?? ""}`}
           />
           <div className="absolute -bottom-5 left-4 right-4 grid grid-cols-2 gap-2 rounded-2xl border border-graphite/10 bg-offwhite p-4 shadow-xl shadow-graphite/10 sm:left-auto sm:right-[-1rem] sm:w-72">
             {TRUST_STATS.slice(0, 2).map((s) => (
@@ -418,6 +498,7 @@ function Hero({ funnel }: { funnel: FunnelLink }) {
 
 /* Hervorgehobener Einstieg in den Funnel: erste Frage direkt auf der Seite */
 function PriceCalculator({ funnel }: { funnel: FunnelLink }) {
+  const { calculatorTitle } = useLp()
   return (
     <section id="preisrechner" className="scroll-mt-20 bg-yellow">
       <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-5 py-14 md:px-8 md:py-20 lg:grid-cols-[0.9fr_1.1fr]">
@@ -426,7 +507,7 @@ function PriceCalculator({ funnel }: { funnel: FunnelLink }) {
             Kostenloser Preisrechner
           </p>
           <h2 className="mt-3 font-display text-4xl font-semibold leading-tight tracking-[-0.02em] text-graphite md:text-5xl">
-            Was kostet Ihre Wärmepumpe?
+            {calculatorTitle}
           </h2>
           <p className="mt-4 max-w-md text-lg leading-relaxed text-graphite/75">
             Beantworten Sie ein paar kurze Fragen zu Ihrem Haus — wir erstellen
@@ -628,8 +709,10 @@ function Reasons() {
 }
 
 function Installations({ funnel }: { funnel: FunnelLink }) {
+  const { installations } = useLp()
   const [filter, setFilter] = useState<"Alle" | "Außen" | "Innen">("Alle")
-  const items = INSTALLATIONS.filter((i) => filter === "Alle" || i.where === filter)
+  const items = installations.filter((i) => filter === "Alle" || i.where === filter)
+  const showFilter = installations.length >= 8
 
   return (
     <section id="referenzen" className="mx-auto max-w-7xl scroll-mt-20 px-5 py-16 md:px-8 md:py-24">
@@ -644,6 +727,7 @@ function Installations({ funnel }: { funnel: FunnelLink }) {
             haben — draußen sauber aufgestellt, drinnen ordentlich verrohrt.
           </p>
         </div>
+        {showFilter && (
         <div role="tablist" aria-label="Fotos filtern" className="flex gap-2">
           {(["Alle", "Außen", "Innen"] as const).map((f) => (
             <button
@@ -663,21 +747,28 @@ function Installations({ funnel }: { funnel: FunnelLink }) {
             </button>
           ))}
         </div>
+        )}
       </div>
 
       <ul className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
         {items.map((i, idx) => (
-          <li key={i.src} className="group relative overflow-hidden rounded-2xl bg-softblue">
+          <li key={i.src ?? i.placeholder} className="group relative overflow-hidden rounded-2xl bg-softblue">
+            {i.placeholder ? (
+              <ImagePlaceholder brief={i.placeholder} className="aspect-[3/4] w-full" />
+            ) : (
             <img
               src={i.src}
               alt={`Von H&S installierte Wärmepumpe${i.brand ? ` (${i.brand})` : ""} — ${i.where === "Außen" ? "Außeneinheit" : "Technikraum"}`}
               loading={idx < 4 ? "eager" : "lazy"}
               className="aspect-[3/4] w-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
+            )}
+            {!i.placeholder && (
             <span className="absolute bottom-3 left-3 rounded-full bg-graphite/80 px-3 py-1 text-xs font-semibold text-offwhite backdrop-blur-sm">
               {i.brand ? `${i.brand} · ` : ""}
               {i.where === "Außen" ? "Außen" : "Technikraum"}
             </span>
+            )}
           </li>
         ))}
       </ul>
@@ -730,6 +821,7 @@ function SecondOpinion({ funnel }: { funnel: FunnelLink }) {
 }
 
 function Reviews({ funnel }: { funnel: FunnelLink }) {
+  const { reviews } = useLp()
   return (
     <section className="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-24">
       <div className="reveal flex flex-col justify-between gap-6 md:flex-row md:items-end">
@@ -758,7 +850,7 @@ function Reviews({ funnel }: { funnel: FunnelLink }) {
         </a>
       </div>
       <div className="knowledge-stagger mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-        {REVIEWS.map((r) => (
+        {reviews.map((r) => (
           <figure key={r.name} className="reveal flex flex-col rounded-2xl border border-graphite/10 bg-offwhite p-6">
             <Stars className="text-lg" />
             <p className="mt-3 font-display text-lg font-semibold leading-snug text-graphite">„{r.title}“</p>
@@ -784,6 +876,7 @@ function Reviews({ funnel }: { funnel: FunnelLink }) {
 }
 
 function Region() {
+  const { region } = useLp()
   return (
     <section className="border-y border-graphite/10 bg-white">
       <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 py-16 md:px-8 md:py-24 lg:grid-cols-2">
@@ -793,11 +886,10 @@ function Region() {
             Regional für Sie vor Ort.
           </h2>
           <p className="mt-4 text-lg leading-relaxed text-slate">
-            Mit über 80 Mitarbeitenden sind wir im Umkreis von rund 50 km um
-            Willich, Köln und Solingen für Sie da.
+            {region.text}
           </p>
           <div className="mt-6 flex flex-wrap gap-2">
-            {["Willich", "Köln", "Solingen", "Düsseldorf", "Krefeld", "Mönchengladbach", "Duisburg", "Viersen", "Bonn", "Erkelenz"].map((c) => (
+            {region.cities.map((c) => (
               <span key={c} className="rounded-full border border-graphite/15 bg-offwhite px-3.5 py-1.5 text-sm font-medium text-graphite">
                 {c}
               </span>
@@ -813,6 +905,7 @@ function Region() {
 }
 
 function Faq() {
+  const { faqs } = useLp()
   const [open, setOpen] = useState<number | null>(0)
   return (
     <section className="mx-auto max-w-3xl px-5 py-16 md:px-8 md:py-24">
@@ -823,7 +916,7 @@ function Faq() {
         </h2>
       </div>
       <div className="mt-10 divide-y divide-graphite/10 border-y border-graphite/10">
-        {FAQS.map((f, i) => {
+        {faqs.map((f, i) => {
           const isOpen = open === i
           return (
             <div key={f.q}>
@@ -858,8 +951,9 @@ function Faq() {
 }
 
 function FinalCta({ funnel }: { funnel: FunnelLink }) {
+  const { phone, finalTitle } = useLp()
   const contacts = [
-    { label: PHONE_DISPLAY, sub: "Direkt anrufen", href: PHONE_HREF, cta: "final-phone" },
+    { label: phone.display, sub: "Direkt anrufen", href: phone.href, cta: "final-phone" },
     { label: "WhatsApp", sub: "Schnelle Frage stellen", href: WHATSAPP_HREF, cta: "final-whatsapp" },
     { label: "Termin buchen", sub: "Beratungstermin online", href: CALENDLY_HREF, cta: "final-calendly" },
   ]
@@ -867,7 +961,7 @@ function FinalCta({ funnel }: { funnel: FunnelLink }) {
     <section className="mx-auto max-w-7xl px-5 pb-28 md:px-8 md:pb-24">
       <div className="reveal overflow-hidden rounded-3xl bg-yellow p-8 text-center md:p-14">
         <h2 className="mx-auto max-w-3xl font-display text-4xl font-semibold leading-tight tracking-[-0.02em] text-graphite md:text-5xl">
-          Jetzt kostenloses Angebot für Ihre Wärmepumpe sichern.
+          {finalTitle}
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-lg text-graphite/75">
           Beantworten Sie ein paar kurze Fragen zu Ihrem Haus — wir melden uns
@@ -903,6 +997,7 @@ function FinalCta({ funnel }: { funnel: FunnelLink }) {
 
 /* Auf dem Handy immer erreichbar: Anruf + Angebot */
 function MobileStickyBar({ funnel }: { funnel: FunnelLink }) {
+  const { phone } = useLp()
   const [visible, setVisible] = useState(false)
   useEffect(() => {
     const onScroll = () => setVisible(window.scrollY > 500)
@@ -918,9 +1013,9 @@ function MobileStickyBar({ funnel }: { funnel: FunnelLink }) {
     >
       <div className="flex gap-2">
         <a
-          href={PHONE_HREF}
+          href={phone.href}
           data-cta="sticky-phone"
-          aria-label={`Anrufen: ${PHONE_DISPLAY}`}
+          aria-label={`Anrufen: ${phone.display}`}
           className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-graphite/20 text-graphite"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
@@ -953,39 +1048,46 @@ function LpFooter() {
   )
 }
 
-export default function LandingPage() {
-  const funnel = useFunnelLink()
+export default function LandingPage({ config = LP_NRW }: { config?: LpConfig }) {
+  const funnel = useFunnelLink(config.funnelParams)
   useReveal()
 
   useEffect(() => {
     const previousTitle = document.title
-    document.title = "Wärmepumpe vom Meisterbetrieb in NRW – kostenloses Angebot | H&S"
+    document.title = config.documentTitle
     return () => {
       document.title = previousTitle
     }
-  }, [])
+  }, [config.documentTitle])
 
   return (
-    <div className="min-h-full bg-offwhite">
-      <LpHeader funnel={funnel} />
-      <main>
-        <Hero funnel={funnel} />
-        <UrgencyBand funnel={funnel} />
-        <PriceCalculator funnel={funnel} />
-        <LogoStrip />
-        <HowItWorks funnel={funnel} />
-        <Funding funnel={funnel} />
-        <StatsBar />
-        <Reasons />
-        <Installations funnel={funnel} />
-        <Reviews funnel={funnel} />
-        <SecondOpinion funnel={funnel} />
-        <Region />
-        <Faq />
-        <FinalCta funnel={funnel} />
-      </main>
-      <LpFooter />
-      <MobileStickyBar funnel={funnel} />
-    </div>
+    <LpContext.Provider value={config}>
+      <div className="min-h-full bg-offwhite">
+        <LpHeader funnel={funnel} />
+        <main>
+          <Hero funnel={funnel} />
+          <UrgencyBand funnel={funnel} />
+          <PriceCalculator funnel={funnel} />
+          {config.showLogoStrip && <LogoStrip />}
+          {config.brand}
+          <HowItWorks funnel={funnel} />
+          <Funding funnel={funnel} />
+          <StatsBar />
+          <Reasons />
+          <Installations funnel={funnel} />
+          <Reviews funnel={funnel} />
+          <SecondOpinion funnel={funnel} />
+          <Region />
+          <Faq />
+          <FinalCta funnel={funnel} />
+        </main>
+        <LpFooter />
+        <MobileStickyBar funnel={funnel} />
+      </div>
+    </LpContext.Provider>
   )
 }
+
+// Für Varianten-Seiten (z. B. Vaillant Solingen)
+export { INSTALLATIONS, REVIEWS, FAQS, PrimaryCta, Microcopy, CheckIcon, useLp, useFunnelLink }
+export type { FunnelLink }

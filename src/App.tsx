@@ -2699,6 +2699,7 @@ import DomesticHotWaterHeatPumpPage from "./DomesticHotWaterHeatPumpPage"
 import AirWaterHeatPumpPage from "./AirWaterHeatPumpPage"
 import CareerPage from "./CareerPage"
 import LandingPage from "./LandingPage"
+import LandingPageVaillantSolingen from "./LandingPageVaillantSolingen"
 
 const router = createBrowserRouter([
   {
@@ -2746,6 +2747,7 @@ const router = createBrowserRouter([
   { path: "/flyer", Component: FlyerPage },
   // Kampagnen-Landingpage: eigenes, ablenkungsfreies Layout ohne Hauptnavigation.
   { path: "/lp/waermepumpe-nrw", Component: LandingPage },
+  { path: "/lp/vaillant-solingen", Component: LandingPageVaillantSolingen },
 ], { basename: import.meta.env.BASE_URL })
 
 export default function App() {
