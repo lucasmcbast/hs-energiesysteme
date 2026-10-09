@@ -270,7 +270,7 @@ const vaillantFaqs = [
     q: "Wo sind Sie in Solingen?",
     a: (
       <>
-        Unser Standort: <Ph>Adresse Solingen</Ph>. Von dort sind wir im Umkreis
+        Unser Standort: Stöcken 17, 42651 Solingen. Von dort sind wir im Umkreis
         von rund 50 km für Sie da — u. a. Wuppertal, Remscheid, Haan, Hilden,
         Leichlingen, Langenfeld und Leverkusen.
       </>
@@ -337,7 +337,7 @@ export const LP_VAILLANT_SOLINGEN: LpConfig = {
   region: {
     text: (
       <>
-        Von unserem Standort in Solingen (<Ph>Adresse</Ph>) sind wir im Umkreis
+        Von unserem Standort in Solingen (Stöcken 17, 42651 Solingen) sind wir im Umkreis
         von rund 50 km für Sie da — schnell vor Ort, mit festem Ansprechpartner.
       </>
     ),
