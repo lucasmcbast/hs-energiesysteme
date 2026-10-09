@@ -14,6 +14,7 @@ import LandingPage, {
 } from "./LandingPage"
 import fotoVaillant from "./imports/installation-15.webp"
 import logoVaillantPartner from "./imports/vaillant-kompetenzpartner.png"
+import fotoLead from "./imports/andreas-sponsheimer.webp"
 import vWarum from "./imports/vaillant-arotherm-plus-monteur-schieferhaus.webp"
 import vSplitWand from "./imports/vaillant-split-wandkonsole-klinker.webp"
 import vSplitWandQuer from "./imports/vaillant-split-wandkonsole-klinker-quer.webp"
@@ -24,11 +25,11 @@ import vPlusQuer from "./imports/vaillant-arotherm-anthrazit-putzfassade-quer.we
 import vInnengeraet from "./imports/vaillant-innengeraet-technikraum-fenster.webp"
 import vReihenhaus from "./imports/vaillant-split-reihenhaus-garten.webp"
 
-/* TODO: echte Angaben zum Standortleiter Solingen eintragen */
 const LEAD = {
-  name: <Ph>Vorname Nachname</Ph>,
-  role: "Standortleitung Solingen",
-  photoBrief: "Porträt Standortleiter Solingen, H&S-Poloshirt, freundlich, vor Vaillant aroTHERM oder H&S-Fahrzeug — quadratisch, mind. 800 px",
+  name: "Andreas Sponsheimer",
+  role: "Standortleiter Solingen",
+  photo: fotoLead,
+  // TODO: Zitat von Andreas Sponsheimer einholen
   quote: <Ph>Kurzes Zitat des Standortleiters, z. B. warum H&amp;S auf Vaillant setzt</Ph>,
 }
 
@@ -205,7 +206,12 @@ function LocationLead() {
   return (
     <section className="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-24">
       <div className="reveal grid overflow-hidden rounded-3xl border border-graphite/10 bg-offwhite md:grid-cols-[0.8fr_1.2fr]">
-        <ImagePlaceholder brief={LEAD.photoBrief} className="aspect-square h-full w-full rounded-none border-0 md:border-r-2" />
+        <img
+          src={LEAD.photo}
+          alt={`${LEAD.name}, ${LEAD.role} bei H&S Energiesysteme`}
+          loading="lazy"
+          className="aspect-square h-full w-full object-cover"
+        />
         <div className="flex flex-col justify-center p-8 md:p-12">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-vaillant">Ihr Ansprechpartner in Solingen</p>
           <p className="mt-4 font-display text-3xl font-semibold leading-snug text-graphite md:text-4xl">
@@ -296,9 +302,7 @@ export const LP_VAILLANT_SOLINGEN: LpConfig = {
   ),
   heroCard: (
     <div className="absolute -bottom-6 left-4 right-4 flex items-center gap-4 rounded-2xl border border-graphite/10 bg-offwhite p-4 shadow-xl shadow-graphite/10 sm:left-auto sm:right-[-1rem] sm:w-80">
-      <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-2 border-dashed border-amber/70 bg-yellow/15 text-[10px] font-semibold uppercase text-amber">
-        Foto
-      </span>
+      <img src={LEAD.photo} alt="" className="h-14 w-14 shrink-0 rounded-full object-cover ring-2 ring-vaillant/30" />
       <span className="text-sm leading-snug">
         <span className="block text-xs font-semibold uppercase tracking-[0.14em] text-vaillant">Ihr Ansprechpartner</span>
         <span className="block font-semibold text-graphite">{LEAD.name}</span>
