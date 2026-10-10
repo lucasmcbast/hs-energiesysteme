@@ -331,7 +331,7 @@ function ClosingCta() {
             Jetzt Kontakt aufnehmen <ArrowIcon />
           </a>
           <Link
-            to="/waermepumpen"
+            to="/leistungen/waermepumpen"
             className="inline-flex items-center rounded-full border border-graphite/20 px-7 py-4 font-semibold text-graphite transition-colors hover:border-graphite hover:bg-graphite hover:text-offwhite"
           >
             Wärmepumpen entdecken

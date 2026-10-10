@@ -4,6 +4,7 @@ import {
   RouterProvider,
   Outlet,
   Link,
+  Navigate,
   useLocation,
 } from "react-router"
 import logoDark from "./imports/H_S_logo_large-Dark.png"
@@ -52,7 +53,8 @@ function Logo({ light = false, className = "" }: { light?: boolean; className?: 
 /*  Header                                                             */
 /* ------------------------------------------------------------------ */
 const NAV: { label: string; href?: string; to?: string }[] = [
-  { label: "Wärmepumpen", to: "/waermepumpen" },
+  { label: "Wärmepumpen", to: "/leistungen/waermepumpen" },
+  { label: "PV-Anlagen", to: "/leistungen/solaranlage-und-pv" },
   { label: "Über uns", to: "/ueber-uns" },
   { label: "Wissen", to: "/wissen-und-infos" },
   { label: "Jobs", to: "/bewerben" },
@@ -74,7 +76,9 @@ function Header() {
   // Auf der Unterseite ist der Hero dunkel — der Header wird dann hell
   // gerendert, bis gescrollt wird (dann greift der helle Header-Grund).
   const onDark =
-    (pathname === "/waermepumpen" || pathname === "/wissen-und-infos") &&
+    (pathname === "/leistungen/waermepumpen" ||
+      pathname === "/leistungen/solaranlage-und-pv" ||
+      pathname === "/wissen-und-infos") &&
     !scrolled
   const navCls = `group relative text-[15px] font-medium transition-colors duration-200 ${
     onDark ? "text-offwhite/80 hover:text-offwhite" : "text-graphite/80 hover:text-graphite"
@@ -301,7 +305,7 @@ function Hero() {
               </span>
             </span>
             <span className="text-sm font-medium text-slate">
-              Google Bewertungen · [Anzahl]
+              107 Google-Bewertungen
             </span>
           </div>
         </div>
@@ -963,7 +967,7 @@ function Stimmen() {
               </span>
             </span>
             <span className="text-xs font-medium text-slate">
-              Google Bewertungen · [Anzahl]
+              107 Google-Bewertungen
             </span>
           </span>
         </div>
@@ -1166,7 +1170,7 @@ const FAQS = [
   },
   {
     q: "Wie lange dauert die Installation?",
-    a: "Eine typische Wärmepumpen-Installation dauert bei uns in der Regel [X] Tage. Den genauen Ablauf und einen festen Termin besprechen wir vorab — inklusive fester Ansprechpartner:innen.",
+    a: "Eine typische Wärmepumpen-Installation dauert bei uns in der Regel 4–5 Werktage – alte Anlage raus, Wärmepumpe rein und in Betrieb genommen. Den genauen Ablauf und einen festen Termin besprechen wir vorab — inklusive fester Ansprechpartner:innen.",
   },
   {
     q: "Wie viel Förderung bekomme ich?",
@@ -1182,7 +1186,27 @@ const FAQS = [
   },
 ]
 
-function Faq() {
+/* Zusätzliche Fragen für die Leistungsseite Wärmepumpen (Inhalte der bisherigen Live-Seite) */
+const WP_FAQS = [
+  {
+    q: "Welche Wärmepumpen verbaut H&S Energiesysteme?",
+    a: "Wir installieren Luft-Wasser-Wärmepumpen in Monoblock- und Split-Bauweise sowie Sole-/Erdwärmepumpen – bei Erdwärme in der Regel zusammen mit lokalen Bohrunternehmen. Aktuell setzen wir vor allem auf Bosch, Buderus und Vaillant, bei größeren Leistungen auf Panasonic.",
+  },
+  {
+    q: "Funktioniert eine Wärmepumpe auch ohne Fußbodenheizung?",
+    a: "Ja. Eine Fußbodenheizung ist ideal, aber keine Voraussetzung. Auch mit Heizkörpern – oft sogar mit den vorhandenen – arbeitet eine Wärmepumpe gut, wenn die Heizflächen groß genug sind. Denn sie heizt mit niedrigeren Vorlauftemperaturen als Gas oder Öl: Je größer die Heizflächen, desto effizienter.",
+  },
+  {
+    q: "Ist mein Haus für eine Wärmepumpe geeignet?",
+    a: "Grundsätzlich finden wir für fast jedes Gebäude eine Lösung. Entscheidend sind die benötigte Heizleistung und genug Platz für Außen- und Inneneinheit samt Speicher. Unser Schwerpunkt liegt auf Ein- und Zweifamilienhäusern, Doppelhaushälften und Reihenhäusern; für Mehrfamilienhäuser und Gewerbe sprechen Sie uns gern direkt an.",
+  },
+  {
+    q: "Wie viel Strom verbraucht eine Wärmepumpe?",
+    a: "Als Faustformel: bisheriger Gasverbrauch in kWh × 0,9 ÷ Jahresarbeitszahl. Bei 24.000 kWh Gas und einer Jahresarbeitszahl von 3,75 sind das rund 5.760 kWh Strom im Jahr. Mit Fußbodenheizung liegt die Jahresarbeitszahl meist höher als mit Heizkörpern. Bei Öl rechnen Sie Liter × 10 = kWh.",
+  },
+]
+
+function Faq({ items = FAQS }: { items?: { q: string; a: string }[] }) {
   const [open, setOpen] = useState<number | null>(0)
   return (
     <section id="faq" className="mx-auto max-w-3xl px-5 py-20 md:px-8 md:py-28">
@@ -1196,7 +1220,7 @@ function Faq() {
       </div>
 
       <div className="reveal mt-12 divide-y divide-graphite/10 border-y border-graphite/10">
-        {FAQS.map((f, i) => {
+        {items.map((f, i) => {
           const isOpen = open === i
           return (
             <div key={i}>
@@ -1487,7 +1511,7 @@ function WpHero() {
 
           <h1 className="mt-6 font-display text-[2.6rem] font-semibold leading-[1.02] tracking-[-0.02em] text-offwhite sm:text-6xl md:text-[4.1rem]">
             Wärmepumpen vom{" "}
-            <span className="marker text-graphite">regionalen Meisterbetrieb</span>.
+            <span className="marker text-offwhite">regionalen Meisterbetrieb</span>.
           </h1>
 
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-offwhite/75">
@@ -1522,7 +1546,7 @@ function WpHero() {
               </span>
             </span>
             <span className="text-sm font-medium text-offwhite/70">
-              Google Bewertungen · [Anzahl]
+              107 Google-Bewertungen
             </span>
           </div>
         </div>
@@ -1947,14 +1971,16 @@ function Rechner() {
     const cop = 3.2 + (baujahr - 1950) * (0.9 / 70) // neuer = niedrigere Vorlauf = besser
     const kostenWp = (bedarf / cop) * 0.3
     const ersparnis = Math.max(0, kostenAlt - kostenWp)
-    // Investition grob nach Haustyp, mit beispielhafter Förderannahme
-    const invBrutto = flaeche > 200 ? 34000 : flaeche > 120 ? 24000 : 21000
-    const eigenanteil = invBrutto * 0.45 // Annahme ~55 % Förderung
+    // Eigenanteil wie auf /kosten/waermepumpen-kosten: 33.500–36.000 € Anlage (EFH/DHH),
+    // abzüglich 30 % Grundförderung + 16 % Klimageschwindigkeitsbonus auf max. 28.000 €
+    // förderfähige Kosten (KfW 458, Stand 21.07.2026). MFH: individuell.
+    const zuschuss = 0.46 * 28000
+    const mfh = HAUSTYPEN[haus].key === "mfh"
     return {
       ersparnisLow: ersparnis * 0.85,
       ersparnisHigh: ersparnis * 1.15,
-      eigenLow: eigenanteil * 0.9,
-      eigenHigh: eigenanteil * 1.1,
+      eigenLow: mfh ? null : 33500 - zuschuss,
+      eigenHigh: mfh ? null : 36000 - zuschuss,
     }
   }, [haus, baujahr, heiz])
 
@@ -2059,7 +2085,14 @@ function Rechner() {
                 Grober Eigenanteil nach Förderung
               </p>
               <p className="mt-1 font-display text-3xl font-semibold text-offwhite">
-                {eur(result.eigenLow)}–{eur(result.eigenHigh)} €
+                {result.eigenLow === null || result.eigenHigh === null
+                  ? "individuell"
+                  : `${eur(result.eigenLow)}–${eur(result.eigenHigh)} €`}
+              </p>
+              <p className="mt-1 text-xs text-offwhite/50">
+                {result.eigenLow === null
+                  ? "Bei Mehrfamilienhäusern hängt die Förderung von der Zahl der Wohneinheiten ab."
+                  : "Mit Grundförderung und Klimageschwindigkeitsbonus (46 %). Mit Einkommensbonus weniger."}
               </p>
             </div>
 
@@ -2484,7 +2517,7 @@ function VertrauenReviews() {
             ★★★★★
           </p>
           <p className="mt-2 text-sm font-medium text-slate">
-            aus [Anzahl] Google-Bewertungen
+            aus 107 Google-Bewertungen
           </p>
           <div className="mt-6 flex flex-col gap-2 border-t border-graphite/10 pt-6 text-left">
             {QUALI.map((q) => (
@@ -2576,7 +2609,7 @@ function WaermepumpenPage() {
       <HandwerkGrid />
       <Referenzen />
       <VertrauenReviews />
-      <Faq />
+      <Faq items={[...WP_FAQS, ...FAQS]} />
       <HomeBand
         headline="Bereit für Ihre Wärmepumpe? Jetzt Angebot berechnen."
         cta
@@ -2676,6 +2709,15 @@ function BuderusWaermepumpeRoute() {
   )
 }
 
+function PvRoute() {
+  return (
+    <>
+      <PvPage />
+      <Contact />
+    </>
+  )
+}
+
 function WarmwasserWaermepumpeRoute() {
   return (
     <>
@@ -2728,6 +2770,7 @@ import BuderusHeatPumpPage from "./BuderusHeatPumpPage"
 import DomesticHotWaterHeatPumpPage from "./DomesticHotWaterHeatPumpPage"
 import AirWaterHeatPumpPage from "./AirWaterHeatPumpPage"
 import CareerPage from "./CareerPage"
+import PvPage from "./PvPage"
 import TopicArticlePage, { ARTICLES as TOPIC_ARTICLES } from "./TopicArticlePage"
 import LandingPage from "./LandingPage"
 import LandingPageVaillantSolingen from "./LandingPageVaillantSolingen"
@@ -2738,7 +2781,10 @@ const router = createBrowserRouter([
     Component: RootLayout,
     children: [
       { index: true, Component: HomePage },
-      { path: "waermepumpen", Component: WaermepumpenPage },
+      // Leistungsseiten unter den URLs der bisherigen Live-Seite.
+      { path: "leistungen/waermepumpen", Component: WaermepumpenPage },
+      { path: "leistungen/solaranlage-und-pv", Component: PvRoute },
+      { path: "waermepumpen", Component: () => <Navigate to="/leistungen/waermepumpen" replace /> },
       { path: "ueber-uns", Component: UeberUnsPage },
       { path: "wissen-und-infos", Component: WissenPage },
       {
