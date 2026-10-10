@@ -10,6 +10,8 @@ import {
 import logoDark from "./imports/H_S_logo_large-Dark.png"
 import useReveal from "./useReveal"
 import heroWaermepumpe from "./imports/L1090589-Edit.jpg"
+import wpHeroBild from "./imports/monoblock-waermepumpe-beratung.webp"
+import ServiceHero from "./ServiceHero"
 import familieHaus from "./imports/image-3.webp"
 import portraitGF from "./imports/image-4.webp"
 import portraitMeister from "./imports/image-5.webp"
@@ -73,6 +75,20 @@ function Header() {
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
 
+  // Mobiles Menü: bei Seitenwechsel schließen, Hintergrund nicht scrollen, Esc schließt.
+  useEffect(() => setOpen(false), [pathname])
+  useEffect(() => {
+    if (!open) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false)
+    window.addEventListener("keydown", onKey)
+    return () => {
+      document.body.style.overflow = prev
+      window.removeEventListener("keydown", onKey)
+    }
+  }, [open])
+
   // Auf der Unterseite ist der Hero dunkel — der Header wird dann hell
   // gerendert, bis gescrollt wird (dann greift der helle Header-Grund).
   const onDark =
@@ -85,6 +101,7 @@ function Header() {
   }`
 
   return (
+    <>
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
         scrolled
@@ -131,60 +148,100 @@ function Header() {
             Angebot anfragen
           </a>
           <button
-            onClick={() => setOpen((v) => !v)}
-            className={`flex h-10 w-10 items-center justify-center rounded-full border md:hidden ${
+            onClick={() => setOpen(true)}
+            className={`-mr-1 flex h-12 w-12 items-center justify-center rounded-full border md:hidden ${
               onDark ? "border-offwhite/30 text-offwhite" : "border-graphite/15 text-graphite"
             }`}
             aria-label="Menü öffnen"
             aria-expanded={open}
+            aria-controls="mobile-menu"
           >
-            <span className="text-xl leading-none">{open ? "×" : "≡"}</span>
+            <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" aria-hidden="true">
+              <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+            </svg>
           </button>
         </div>
       </div>
 
-      {open && (
-        <div className="border-t border-graphite/10 bg-offwhite px-5 pb-6 pt-2 md:hidden">
-          <nav className="flex flex-col">
-            {NAV.map((n) =>
-              n.to ? (
-                <Link
-                  key={n.label}
-                  to={n.to}
-                  onClick={() => setOpen(false)}
-                  className="border-b border-graphite/10 py-3 text-lg font-medium text-graphite"
-                >
-                  {n.label}
-                </Link>
-              ) : (
-                <a
-                  key={n.label}
-                  href={n.href}
-                  onClick={() => setOpen(false)}
-                  className="border-b border-graphite/10 py-3 text-lg font-medium text-graphite"
-                >
-                  {n.label}
-                </a>
-              ),
-            )}
-            <a
-              href={HEYFLOW_URL}
-              onClick={() => setOpen(false)}
-              className="mt-4 rounded-full bg-yellow px-5 py-3 text-center font-semibold text-graphite"
-            >
-              Angebot kostenlos anfragen
-            </a>
-            <a
-              href="#kontakt"
-              onClick={() => setOpen(false)}
-              className="mt-2 rounded-full border border-graphite/20 px-5 py-3 text-center font-semibold text-graphite"
-            >
-              Kostenlose Beratung
-            </a>
-          </nav>
-        </div>
-      )}
     </header>
+
+    {/* Mobiles Menü als Vollbild-Overlay – außerhalb des Headers, weil dessen
+        backdrop-blur sonst den fixierten Bereich auf die Headerhöhe begrenzt. */}
+    {open && (
+      <div
+        id="mobile-menu"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Hauptmenü"
+        className="fixed inset-0 z-[60] flex h-[100dvh] flex-col bg-offwhite md:hidden"
+      >
+        <div className="flex items-center justify-between border-b border-graphite/10 px-5 py-4">
+          <Link to="/" onClick={() => setOpen(false)} aria-label="Zur Startseite">
+            <Logo className="h-7 w-auto" />
+          </Link>
+          <button
+            onClick={() => setOpen(false)}
+            className="-mr-1 flex h-12 w-12 items-center justify-center rounded-full bg-graphite text-offwhite"
+            aria-label="Menü schließen"
+          >
+            <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" aria-hidden="true">
+              <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+            </svg>
+          </button>
+        </div>
+
+        <nav className="flex-1 overflow-y-auto px-5 py-2">
+          {NAV.map((n) => {
+            const cls =
+              "flex min-h-16 items-center justify-between border-b border-graphite/10 py-4 font-display text-2xl font-semibold text-graphite active:text-amber"
+            const inner = (
+              <>
+                {n.label}
+                <span aria-hidden className="text-xl text-amber">
+                  →
+                </span>
+              </>
+            )
+            return n.to ? (
+              <Link key={n.label} to={n.to} onClick={() => setOpen(false)} className={cls}>
+                {inner}
+              </Link>
+            ) : (
+              <a key={n.label} href={n.href} onClick={() => setOpen(false)} className={cls}>
+                {inner}
+              </a>
+            )
+          })}
+        </nav>
+
+        <div className="grid gap-3 border-t border-graphite/10 px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4">
+          <a
+            href={HEYFLOW_URL}
+            onClick={() => setOpen(false)}
+            className="flex min-h-14 items-center justify-center rounded-full bg-yellow px-5 text-lg font-semibold text-graphite"
+          >
+            Angebot kostenlos anfragen
+          </a>
+          <div className="grid grid-cols-2 gap-3">
+            <a
+              href="tel:+4921548809537"
+              className="flex min-h-14 items-center justify-center rounded-full border border-graphite/20 px-4 font-semibold text-graphite"
+            >
+              Anrufen
+            </a>
+            <a
+              href="https://wa.me/4921548809537"
+              target="_blank"
+              rel="noreferrer"
+              className="flex min-h-14 items-center justify-center rounded-full border border-graphite/20 px-4 font-semibold text-graphite"
+            >
+              WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+    )}
+    </>
   )
 }
 
@@ -1474,103 +1531,60 @@ function Footer() {
 /* ------------------------------------------------------------------ */
 function WpHero() {
   return (
-    <section id="top" className="relative overflow-hidden bg-ink text-offwhite">
-      {/* helles Punktraster auf dunklem Grund — deutlich anders als die Startseite */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.07]"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 1px 1px, var(--color-offwhite) 1px, transparent 0)",
-          backgroundSize: "26px 26px",
-        }}
-      />
-      {/* warmer Lichtschein oben rechts */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -right-40 -top-40 h-96 w-96 rounded-full bg-yellow/20 blur-3xl"
-      />
-      <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 pb-14 pt-28 md:grid-cols-[1.05fr_0.95fr] md:px-8 md:pb-20 md:pt-36">
-        <div className="reveal">
-          {/* Breadcrumb — signalisiert klar: Unterseite */}
-          <nav
-            aria-label="Brotkrumen"
-            className="flex items-center gap-2 text-sm font-medium text-offwhite/50"
+    <ServiceHero
+      crumb="Wärmepumpen"
+      topic="Leistung: Wärmepumpe"
+      title={
+        <>
+          Wärmepumpen vom{" "}
+          <span className="marker text-offwhite">regionalen Meisterbetrieb</span>.
+        </>
+      }
+      text={
+        <>
+          Beratung, Einbau und Service aus einer Hand — von Menschen, die Sie
+          kennen. Statt anonymer Bundes-Anbieter bekommen Sie bei H&amp;S echtes
+          Handwerk, feste Ansprechpartner und Hilfe bei der Förderung.
+        </>
+      }
+      actions={
+        <>
+          <a
+            href="#rechner"
+            className="rounded-full bg-yellow px-7 py-3.5 text-base font-semibold text-graphite transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-yellow/40"
           >
-            <Link to="/" className="transition-colors hover:text-offwhite">
-              Startseite
-            </Link>
-            <span aria-hidden>/</span>
-            <span className="text-offwhite/90">Wärmepumpen</span>
-          </nav>
-
-          <span className="mt-5 inline-flex max-w-full items-center gap-2 rounded-full border border-offwhite/20 bg-offwhite/[0.06] px-3.5 py-1.5 text-[12px] font-semibold text-offwhite/80 sm:text-[13px]">
-            <span className="h-2 w-2 shrink-0 rounded-full bg-amber" />
-            Willich · Köln · Solingen — persönlich vor Ort
+            Jetzt Angebot berechnen
+          </a>
+          <a
+            href="#kontakt"
+            className="rounded-full border border-offwhite/40 px-7 py-3.5 text-base font-semibold text-offwhite transition-colors duration-200 hover:bg-offwhite hover:text-graphite"
+          >
+            Kostenlose Beratung
+          </a>
+        </>
+      }
+      meta={
+        <div className="inline-flex items-center gap-3 rounded-full border border-offwhite/15 bg-offwhite/[0.06] px-4 py-2.5">
+          <GoogleG className="h-5 w-5 shrink-0" />
+          <span className="font-display text-base font-semibold text-offwhite">4,9</span>
+          <span className="text-amber" aria-hidden>
+            ★★★★★
           </span>
-
-          <h1 className="mt-6 font-display text-[2.6rem] font-semibold leading-[1.02] tracking-[-0.02em] text-offwhite sm:text-6xl md:text-[4.1rem]">
-            Wärmepumpen vom{" "}
-            <span className="marker text-offwhite">regionalen Meisterbetrieb</span>.
-          </h1>
-
-          <p className="mt-6 max-w-xl text-lg leading-relaxed text-offwhite/75">
-            Beratung, Einbau und Service aus einer Hand — von Menschen, die Sie
-            kennen. Statt anonymer Bundes-Anbieter bekommen Sie bei H&amp;S echtes
-            Handwerk, feste Ansprechpartner und die volle Förderung.
-          </p>
-
-          <div className="mt-8 flex flex-wrap items-center gap-4">
-            <a
-              href="#rechner"
-              className="rounded-full bg-yellow px-7 py-3.5 text-base font-semibold text-graphite transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-yellow/40"
-            >
-              Jetzt Angebot berechnen
-            </a>
-            <a
-              href="#kontakt"
-              className="rounded-full border border-offwhite/40 px-7 py-3.5 text-base font-semibold text-offwhite transition-colors duration-200 hover:bg-offwhite hover:text-graphite"
-            >
-              Kostenlose Beratung sichern
-            </a>
-          </div>
-
-          <div className="mt-6 inline-flex items-center gap-3 rounded-full border border-offwhite/15 bg-offwhite/[0.06] px-4 py-2.5">
-            <GoogleG className="h-5 w-5 shrink-0" />
-            <span className="flex items-center gap-1.5">
-              <span className="font-display text-base font-semibold text-offwhite">
-                4,9
-              </span>
-              <span className="text-amber" aria-hidden>
-                ★★★★★
-              </span>
-            </span>
-            <span className="text-sm font-medium text-offwhite/70">
-              107 Google-Bewertungen
-            </span>
-          </div>
+          <span className="text-sm font-medium text-offwhite/70">107 Google-Bewertungen</span>
         </div>
-
-        <div className="reveal">
-          <div className="relative">
-            <PhotoPlaceholder
-              label="H&S Energiesysteme — Wärmepumpe vor Ort"
-              alt="H&S-Fachkraft neben einer frisch installierten Luft-Wasser-Wärmepumpe am Haus"
-              src={heroWaermepumpe}
-              ratio="aspect-[4/5]"
-              position="object-[60%_center]"
-              className="shadow-2xl shadow-graphite/40 ring-1 ring-offwhite/10"
-            />
-            <div className="absolute -bottom-5 -left-5 hidden max-w-[220px] rounded-xl border border-graphite/10 bg-offwhite p-4 shadow-xl shadow-graphite/30 sm:block">
-              <p className="font-display text-lg font-semibold text-graphite">
-                „Ein Team. Ein Ansprechpartner. Ein Ergebnis.“
-              </p>
-              <p className="mt-1 text-sm text-slate">[Name], Meister</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+      }
+      image={{
+        src: wpHeroBild,
+        alt: "H&S-Fachkraft erklärt einer Kundin die neu installierte Luft-Wasser-Wärmepumpe vor dem Haus",
+        position: "object-[center_60%]",
+      }}
+      facts={[
+        { value: "4–5 Tage", label: "Installation" },
+        { value: "bis 70 %", label: "Förderung möglich" },
+        { value: "Luft & Erde", label: "Monoblock, Split, Sole" },
+        { value: "3 Standorte", label: "Willich · Köln · Solingen" },
+      ]}
+    />
   )
 }
 

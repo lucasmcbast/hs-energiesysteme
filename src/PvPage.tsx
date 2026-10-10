@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router"
 import pvFachkraft from "./imports/pv-fachkraft-dach.webp"
+import pvHeroBild from "./imports/waermepumpe-photovoltaik.webp"
+import ServiceHero from "./ServiceHero"
 import teamPortrait from "./imports/hs-team-portrait-halle.webp"
-import pvWaermepumpe from "./imports/waermepumpe-photovoltaik.webp"
 
 /* Leistungsseite Solaranlage & PV – Inhalte der bisherigen Live-Seite
    (/leistungen/solaranlage-und-pv), Zahlen wie im Artikel
@@ -26,93 +27,55 @@ function ArrowIcon({ className = "" }: { className?: string }) {
 
 function PvHero() {
   return (
-    <section id="top" className="relative overflow-hidden bg-ink text-offwhite">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.07]"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 1px 1px, var(--color-offwhite) 1px, transparent 0)",
-          backgroundSize: "26px 26px",
-        }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -right-40 -top-40 h-96 w-96 rounded-full bg-yellow/20 blur-3xl"
-      />
-      <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 pb-14 pt-28 md:grid-cols-[1.05fr_0.95fr] md:px-8 md:pb-20 md:pt-36">
-        <div className="reveal">
-          <nav
-            aria-label="Brotkrumen"
-            className="flex items-center gap-2 text-sm font-medium text-offwhite/50"
+    <ServiceHero
+      crumb="Solaranlage & PV"
+      topic="Leistung: Photovoltaik"
+      title={
+        <>
+          PV-Anlage vom{" "}
+          <span className="marker text-offwhite">regionalen Meisterbetrieb</span>.
+        </>
+      }
+      text={
+        <>
+          Eine Photovoltaikanlage ist eine langfristige Investition. Deshalb
+          legen wir Wert auf saubere Planung, abgestimmte Komponenten und eine
+          verlässliche Umsetzung – von der ersten Analyse bis zur
+          Inbetriebnahme.
+        </>
+      }
+      actions={
+        <>
+          <a
+            href="#kontakt"
+            data-cta="pv-hero"
+            className="rounded-full bg-yellow px-7 py-3.5 text-base font-semibold text-graphite transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-yellow/40"
           >
-            <Link to="/" className="transition-colors hover:text-offwhite">
-              Startseite
-            </Link>
-            <span aria-hidden>/</span>
-            <span className="text-offwhite/90">Solaranlage &amp; PV</span>
-          </nav>
-
-          <span className="mt-5 inline-flex max-w-full items-center gap-2 rounded-full border border-offwhite/20 bg-offwhite/[0.06] px-3.5 py-1.5 text-[12px] font-semibold text-offwhite/80 sm:text-[13px]">
-            <span className="h-2 w-2 shrink-0 rounded-full bg-amber" />
-            Willich · Köln · Solingen — persönlich vor Ort
-          </span>
-
-          <h1 className="mt-6 font-display text-[2.6rem] font-semibold leading-[1.02] tracking-[-0.02em] text-offwhite sm:text-6xl md:text-[4.1rem]">
-            PV-Anlage vom{" "}
-            <span className="marker text-offwhite">regionalen Meisterbetrieb</span>.
-          </h1>
-
-          <p className="mt-6 max-w-xl text-lg leading-relaxed text-offwhite/75">
-            Eine Photovoltaikanlage ist eine langfristige Investition. Deshalb
-            legen wir Wert auf saubere Planung, abgestimmte Komponenten und eine
-            verlässliche Umsetzung – von der ersten Analyse bis zur
-            Inbetriebnahme.
-          </p>
-
-          <div className="mt-8 flex flex-wrap items-center gap-4">
-            <a
-              href="#kontakt"
-              data-cta="pv-hero"
-              className="rounded-full bg-yellow px-7 py-3.5 text-base font-semibold text-graphite transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-yellow/40"
-            >
-              PV-Angebot anfragen
-            </a>
-            <a
-              href={WHATSAPP_URL}
-              target="_blank"
-              rel="noreferrer"
-              data-cta="pv-hero-whatsapp"
-              className="rounded-full border border-offwhite/40 px-7 py-3.5 text-base font-semibold text-offwhite transition-colors duration-200 hover:bg-offwhite hover:text-graphite"
-            >
-              Per WhatsApp fragen
-            </a>
-          </div>
-
-          <ul className="mt-8 grid gap-3 text-sm text-offwhite/75 sm:grid-cols-2">
-            {[
-              "Beratung, Montage & Anmeldung aus einer Hand",
-              "Feste Ansprechperson – per Telefon & WhatsApp",
-              "Auf Wunsch kombiniert mit Ihrer Wärmepumpe",
-              "0 % Mehrwertsteuer auf Kauf und Installation",
-            ].map((item) => (
-              <li key={item} className="flex items-start gap-2.5">
-                <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-yellow" />
-                {item}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="reveal">
-          <img
-            src={pvFachkraft}
-            alt="H&S-Fachkraft mit Tablet neben einer Photovoltaikanlage auf einem Flachdach"
-            className="aspect-[4/5] w-full rounded-3xl object-cover shadow-2xl shadow-graphite/40 ring-1 ring-offwhite/10"
-          />
-        </div>
-      </div>
-    </section>
+            PV-Angebot anfragen
+          </a>
+          <a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noreferrer"
+            data-cta="pv-hero-whatsapp"
+            className="rounded-full border border-offwhite/40 px-7 py-3.5 text-base font-semibold text-offwhite transition-colors duration-200 hover:bg-offwhite hover:text-graphite"
+          >
+            Per WhatsApp fragen
+          </a>
+        </>
+      }
+      image={{
+        src: pvHeroBild,
+        alt: "Einfamilienhaus mit Photovoltaikanlage auf dem Dach und Wärmepumpe im Garten",
+        position: "object-[center_30%]",
+      }}
+      facts={[
+        { value: "0 %", label: "Mehrwertsteuer" },
+        { value: "inklusive", label: "Anmeldung & Zählertausch" },
+        { value: "PV + WP", label: "aus einer Hand" },
+        { value: "1 Kontakt", label: "per Telefon & WhatsApp" },
+      ]}
+    />
   )
 }
 
@@ -235,9 +198,9 @@ function Combination() {
   return (
     <section className="mx-auto grid max-w-7xl gap-12 px-5 py-20 md:grid-cols-2 md:items-center md:px-8 md:py-28">
       <img
-        src={pvWaermepumpe}
-        alt="Einfamilienhaus mit Photovoltaikanlage auf dem Dach und Wärmepumpe im Garten"
-        className="reveal aspect-[4/3] w-full rounded-3xl object-cover"
+        src={pvFachkraft}
+        alt="H&S-Fachkraft mit Tablet neben einer Photovoltaikanlage auf einem Flachdach"
+        className="reveal aspect-[4/3] w-full rounded-3xl object-cover object-[center_25%]"
         loading="lazy"
       />
       <div className="reveal">
